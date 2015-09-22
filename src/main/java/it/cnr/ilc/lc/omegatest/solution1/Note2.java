@@ -4,7 +4,9 @@ package it.cnr.ilc.lc.omegatest.solution1;
  *
  * @author oakgen
  */
-public class Note extends Annotation {
+public class Note2 extends AnnotationType {
+    
+    private Long id;
 
     private String field1;
     private String field2;

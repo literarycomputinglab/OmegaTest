@@ -10,7 +10,7 @@ import org.neo4j.ogm.annotation.StartNode;
  * @param <T>
  */
 @RelationshipEntity
-public abstract class Locus<T extends Content> extends SuperNode {
+public class Locus<T extends Content> extends SuperNode {
 
     @StartNode
     private Annotation annotation;

@@ -8,12 +8,21 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * @author oakgen
  */
 @NodeEntity
-public abstract class Annotation extends SuperNode {
+public class Annotation extends SuperNode {
 
+    private AnnotationType type;
     private Annotation parent;
     private List<Annotation> children;
     private List<Locus> locus;
     private List<Annotation> references;
+
+    public AnnotationType getType() {
+        return type;
+    }
+
+    public void setType(AnnotationType type) {
+        this.type = type;
+    }
 
     public List<Annotation> getChildren() {
         return children;

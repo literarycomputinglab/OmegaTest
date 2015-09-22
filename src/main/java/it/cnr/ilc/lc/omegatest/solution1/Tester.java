@@ -16,7 +16,7 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester tester = new Tester();
-        tester.test2();
+        tester.test3();
     }
 
     private void test1() {
@@ -31,11 +31,40 @@ public class Tester {
         session.getTransaction().commit();
     }
 
+    private void test2b() {
+        Session session = Neo4jSessionFactory.getNeo4jSession();
+        session.beginTransaction();
+
+        TextContent content = session.load(TextContent.class, 0l, 0);
+
+        TextLocus locus = new TextLocus();
+        locus.setContent(content);
+        locus.setStart(5);
+        locus.setEnd(10);
+
+        Note2 note = new Note2();
+        note.setName("Note2");
+        note.setField1("Ciao");
+        note.setField2("Bello");
+
+        Annotation annotation = new Annotation();
+        annotation.setType(note);
+        ArrayList<Locus> locuses = new ArrayList<>();
+        locuses.add(locus);
+        annotation.setLocus(locuses);
+
+        locus.setAnnotation(annotation);
+
+        session.save(annotation);
+
+        session.getTransaction().commit();
+    }
+
     private void test2() {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        TextContent content = (TextContent) session.load(Content.class, 28l);
+        TextContent content = session.load(TextContent.class, 0l);
 
         TextLocus locus = new TextLocus();
         locus.setContent(content);
@@ -45,23 +74,10 @@ public class Tester {
         Note note = new Note();
         note.setLocus(new ArrayList<Locus>());
         note.getLocus().add(locus);
+        note.setField1("Ciao");
+        note.setField2("Bello");
 
         locus.setAnnotation(note);
-
-        session.save(note);
-
-        session.getTransaction().commit();
-    }
-
-    private void test3() {
-        Session session = Neo4jSessionFactory.getNeo4jSession();
-        session.beginTransaction();
-
-        TextContent content = new TextContent();
-        content.setText("La mamma è bella");
-
-        Note note = (Note) session.load(Note.class, 3l);
-        note.setContent(content);
 
         session.save(note);
 
@@ -95,6 +111,17 @@ public class Tester {
         for (A a : as) {
             System.out.println(a.getR());
         }
+
+        session.getTransaction().commit();
+    }
+
+    private void test3() {
+        Session session = Neo4jSessionFactory.getNeo4jSession();
+        session.beginTransaction();
+
+        Note note = session.load(Note.class, 1l);
+        
+        System.out.println(note.getLocus().get(0));
 
         session.getTransaction().commit();
     }
