@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution1;
+package it.cnr.ilc.lc.omegatest.solution2;
 
 import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.RelationshipEntity;

@@ -16,7 +16,7 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester tester = new Tester();
-        tester.test3();
+        tester.test2();
     }
 
     private void test1() {
@@ -31,40 +31,11 @@ public class Tester {
         session.getTransaction().commit();
     }
 
-    private void test2b() {
-        Session session = Neo4jSessionFactory.getNeo4jSession();
-        session.beginTransaction();
-
-        TextContent content = session.load(TextContent.class, 0l, 0);
-
-        TextLocus locus = new TextLocus();
-        locus.setContent(content);
-        locus.setStart(5);
-        locus.setEnd(10);
-
-        Note2 note = new Note2();
-        note.setName("Note2");
-        note.setField1("Ciao");
-        note.setField2("Bello");
-
-        Annotation annotation = new Annotation();
-        annotation.setType(note);
-        ArrayList<Locus> locuses = new ArrayList<>();
-        locuses.add(locus);
-        annotation.setLocus(locuses);
-
-        locus.setAnnotation(annotation);
-
-        session.save(annotation);
-
-        session.getTransaction().commit();
-    }
-
     private void test2() {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        TextContent content = session.load(TextContent.class, 0l);
+        TextContent content = session.load(TextContent.class, 28l);
 
         TextLocus locus = new TextLocus();
         locus.setContent(content);

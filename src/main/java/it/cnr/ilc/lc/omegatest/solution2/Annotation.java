@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution1;
+package it.cnr.ilc.lc.omegatest.solution2;
 
 import java.util.List;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -8,7 +8,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * @author oakgen
  */
 @NodeEntity
-public abstract class Annotation extends SuperNode {
+public class Annotation extends SuperNode {
 
     private Annotation parent;
     private List<Annotation> children;
