@@ -17,7 +17,7 @@ public abstract class SuperNode implements Serializable {
     private Long id;
     private Status status;
     private Date time;
-    private SuperNode valid;
+    private SuperNode valid;    
 
     public Long getId() {
         return id;

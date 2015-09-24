@@ -9,7 +9,7 @@ import org.neo4j.ogm.session.SessionFactory;
  */
 public class Neo4jSessionFactory {
 
-    private static final SessionFactory SESSION_FACTORY = new SessionFactory("it.cnr.ilc.lc.omegatest");
+    private static final SessionFactory SESSION_FACTORY = new SessionFactory("it.cnr.ilc.lc.omegatest.solution2");
 
     static {
         System.setProperty("username", "neo4j");

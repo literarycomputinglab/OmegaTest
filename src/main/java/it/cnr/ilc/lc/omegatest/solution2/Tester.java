@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution1;
+package it.cnr.ilc.lc.omegatest.solution2;
 
 import it.cnr.ilc.lc.omegatest.Neo4jSessionFactory;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        TextContent content = session.load(TextContent.class, 28l);
+        TextContent content = session.load(TextContent.class, 17l);
 
         TextLocus locus = new TextLocus();
         locus.setContent(content);
@@ -39,25 +39,17 @@ public class Tester {
         locus.setEnd(10);
 
         Note note = new Note();
-        note.setLocus(new ArrayList<Locus>());
-        note.getLocus().add(locus);
         note.setField1("Ciao");
         note.setField2("Bello");
 
-        locus.setAnnotation(note);
+        Annotation<Note> annotation = new Annotation<>();
+        annotation.setExtension(note);
+        annotation.setLocus(new ArrayList<Locus>());
+        annotation.getLocus().add(locus);
+        
+        locus.setAnnotation(annotation);
 
-        session.save(note);
-
-        session.getTransaction().commit();
-    }
-
-    private void test3() {
-        Session session = Neo4jSessionFactory.getNeo4jSession();
-        session.beginTransaction();
-
-        Note note = session.load(Note.class, 1l);
-
-        System.out.println(note.getLocus().get(0));
+        session.save(annotation);
 
         session.getTransaction().commit();
     }
