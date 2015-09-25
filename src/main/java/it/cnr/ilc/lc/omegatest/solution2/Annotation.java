@@ -58,6 +58,7 @@ public final class Annotation<T extends Annotation.Extension> extends SuperNode 
         Annotation<E> annotation = new Annotation<>();
         E extension = (E) LOOKUP_TABLE.get(clazz);
         annotation.setExtension(extension);
+        return annotation;
     }
 
 }
