@@ -14,27 +14,38 @@ import org.neo4j.ogm.annotation.NodeEntity;
 public final class Annotation<T extends Annotation.Extension> extends SuperNode {
 
     private T extension;
-    private List<Locus> locus;
+    //private List<Locus> loci;
+    
+    private Locus locus;
+    
     private List<Relationship> relationships;
 
-    private Annotation() {
+    public Annotation() {
+    }
+    
+    public Locus getLocus() {
+        return locus;
+    }
+
+    public void setLocus(Locus locus) {
+        this.locus = locus;
     }
 
     public T getExtension() {
         return extension;
     }
 
-    private void setExtension(T extension) {
+    public void setExtension(T extension) {
         this.extension = extension;
     }
 
-    public List<Locus> getLocus() {
-        return locus;
-    }
+//    public List<Locus> getLoci() {
+//        return loci;
+//    }
 
-    public void setLocus(List<Locus> locus) {
-        this.locus = locus;
-    }
+//    public void setLoci(List<Locus> loci) {
+//        this.loci = loci;
+//    }
 
     public List<Relationship> getRelationships() {
         return relationships;
