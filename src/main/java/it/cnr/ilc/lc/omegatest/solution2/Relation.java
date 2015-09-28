@@ -12,14 +12,16 @@ import org.neo4j.ogm.annotation.StartNode;
 
 
 @RelationshipEntity
-public class Relationship {
+public class Relation extends SuperNode{
 
+   
     @StartNode
     private Annotation sourceAnnotation;
     
     @EndNode
     private Annotation targetAnnotation;
     
+    private RelationType relType;
 
     public Annotation getTargetAnnotation() {
         return targetAnnotation;
@@ -37,8 +39,16 @@ public class Relationship {
         this.sourceAnnotation = sourceAnnotation;
     }
        
-    public static enum relationType{
+    public static enum RelationType{
         BASE, PART, ALL
+    }
+
+    public RelationType getRelType() {
+        return relType;
+    }
+
+    public void setRelType(RelationType relType) {
+        this.relType = relType;
     }
 
 }

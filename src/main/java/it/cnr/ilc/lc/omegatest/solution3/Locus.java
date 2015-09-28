@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution2;
+package it.cnr.ilc.lc.omegatest.solution3;
 
 import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.RelationshipEntity;
@@ -16,7 +16,7 @@ public abstract class Locus<T extends Content> extends SuperNode {
     private Annotation annotation;
 
     @EndNode
-    private T content;
+    private Source<T> source;
 
     public Annotation getAnnotation() {
         return annotation;
@@ -26,12 +26,12 @@ public abstract class Locus<T extends Content> extends SuperNode {
         this.annotation = annotation;
     }
 
-    public T getContent() {
-        return content;
+    public Source<T> getSource() {
+        return source;
     }
 
-    public void setContent(T content) {
-        this.content = content;
+    public void setSource(Source<T> source) {
+        this.source = source;
     }
 
 }

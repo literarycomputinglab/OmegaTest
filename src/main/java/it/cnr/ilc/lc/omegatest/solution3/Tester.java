@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution2;
+package it.cnr.ilc.lc.omegatest.solution3;
 
 import it.cnr.ilc.lc.omegatest.Neo4jSessionFactory;
 import java.util.ArrayList;

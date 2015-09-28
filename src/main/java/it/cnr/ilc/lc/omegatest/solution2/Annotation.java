@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 /**
  *
@@ -14,21 +15,22 @@ import org.neo4j.ogm.annotation.NodeEntity;
 public final class Annotation<T extends Annotation.Extension> extends SuperNode {
 
     private T extension;
-    //private List<Locus> loci;
-    
-    private Locus locus;
-    
-    private List<Relationship> relationships;
+
+    @Relationship(type = "TEXTLOCUS") //WARN FORZATO TEXTLOCUS: BUG APERTO SU NEO4J
+    private List<Locus> loci;
+
+    public List<Locus> getLoci() {
+        return loci;
+    }
+
+    public void setLoci(List<Locus> loci) {
+        this.loci = loci;
+    }
+
+    @Relationship(type = "RELATION")
+    private List<Relation> relations;
 
     public Annotation() {
-    }
-    
-    public Locus getLocus() {
-        return locus;
-    }
-
-    public void setLocus(Locus locus) {
-        this.locus = locus;
     }
 
     public T getExtension() {
@@ -39,24 +41,16 @@ public final class Annotation<T extends Annotation.Extension> extends SuperNode 
         this.extension = extension;
     }
 
-//    public List<Locus> getLoci() {
-//        return loci;
-//    }
-
-//    public void setLoci(List<Locus> loci) {
-//        this.loci = loci;
-//    }
-
-    public List<Relationship> getRelationships() {
-        return relationships;
+    public List<Relation> getRelations() {
+        return relations;
     }
 
-    public void setRelationships(List<Relationship> relationships) {
-        this.relationships = relationships;
+    public void setRelations(List<Relation> relations) {
+        this.relations = relations;
     }
 
     public static abstract class Extension extends SuperNode {
-
+        
     }
 
     private static final Map<Class<? extends Annotation.Extension>, Annotation.Extension> LOOKUP_TABLE = new HashMap<>();

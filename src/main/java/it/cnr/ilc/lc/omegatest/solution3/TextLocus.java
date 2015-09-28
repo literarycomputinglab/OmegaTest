@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest.solution2;
+package it.cnr.ilc.lc.omegatest.solution3;
 
 import org.neo4j.ogm.annotation.RelationshipEntity;
 
