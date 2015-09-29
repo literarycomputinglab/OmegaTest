@@ -52,7 +52,7 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
     }
 
     public static abstract class Extension extends SuperNode {
-        
+        public abstract <T extends Extension> T build(Builder<T> builder);
     }
 
     private static final Map<String, Class<? extends Annotation.Extension>> LOOKUP_TABLE = new HashMap<>();
@@ -62,7 +62,7 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
     }
 
     
-       public static <T extends Content, E extends Annotation.Extension> Annotation<T,E> newAnnotation(String type) throws InstantiationException, IllegalAccessException {
+       public static <T extends Content, E extends Annotation.Extension> Annotation<T,E> newAnnotation(String type, Builder<E> builder) throws InstantiationException, IllegalAccessException {
            
         try {
             Annotation<T,E> annotation = new Annotation<>();
@@ -71,7 +71,8 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
                 throw new NullPointerException("No implementation found for type " + type);
             }
             E extension = (E) c.newInstance();
-            annotation.setExtension(extension);
+            annotation.setExtension(extension.build(builder));
+                   
             return annotation;
         } catch (InstantiationException | IllegalAccessException ex ) {
             Logger.getLogger(Annotation.class.getName()).log(Level.SEVERE, null, ex);
