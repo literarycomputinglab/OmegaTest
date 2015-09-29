@@ -57,7 +57,7 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
 
     private static final Map<String, Class<? extends Annotation.Extension>> LOOKUP_TABLE = new HashMap<>();
 
-    public static void register(String type,Class<? extends Annotation.Extension> clazz) {
+    public static void register(String type, Class<? extends Annotation.Extension> clazz) {
         LOOKUP_TABLE.put(type,clazz);
     }
 
@@ -67,7 +67,7 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
         try {
             Annotation<T,E> annotation = new Annotation<>();
             Class<?> c = LOOKUP_TABLE.get(type);
-            if (null != c)  {
+            if (null == c)  {
                 throw new NullPointerException("No implementation found for type " + type);
             }
             E extension = (E) c.newInstance();

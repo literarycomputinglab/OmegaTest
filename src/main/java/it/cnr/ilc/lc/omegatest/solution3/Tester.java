@@ -11,18 +11,24 @@ import org.neo4j.ogm.session.Session;
  */
 public class Tester {
 
-    public static void main(String[] args) {
+    public final static String TEXTCONTENT = "La mi' fava sa di menta chi l'assaggia 'un se ne penta";
+    public final static String BASE = "BaseExtension";
+
+    public static void main(String[] args) throws InstantiationException, IllegalAccessException {
         Tester tester = new Tester();
 
         /* crea il nodo content*/
         //tester.test1();
         /* crea il nodo annotazione */
-        //tester.test2();
+        //  tester.test2();
+        //tester.test2_1();
         /* crea un nuovo locus */
-        //tester.test3();
+        // tester.test3();
 
         /* crea annotazione di annotazioni */
-        // tester.test4();
+        //tester.test4();
+
+        /* crea annotazione di content di annotazione */
         tester.test5();
     }
 
@@ -30,36 +36,36 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        TextContent text = new TextContent();
-        text.setText("Ciao mamma, guarda come mi diverto!");
-
-        session.save(text);
+        Source<TextContent> source = new Source();
+        source.setContent(new TextContent());
+        source.getContent().setText(Tester.TEXTCONTENT);
+        session.save(source);
 
         session.getTransaction().commit();
     }
 
-    private void test2() {
+    /**/
+    private void test2() throws InstantiationException, IllegalAccessException {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        TextContent content = session.load(TextContent.class, 18l);
+        Source source = session.load(Source.class, 30l);
 
         TextLocus locus = new TextLocus();
-        locus.setContent(content);
+        locus.setSource(source);
         locus.setStart(5);
         locus.setEnd(10);
 
-        Annotation.register(BaseExtension.class, new BaseExtension()); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<BaseExtension> nota = Annotation.newInstance(BaseExtension.class);
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> nota = Annotation.newAnnotation(Tester.BASE);
 
         System.err.println(nota.toString());
 
-        Annotation.Extension ex = nota.getExtension();
-        BaseExtension bex = (BaseExtension) ex;
-        bex.setField1("nota");
-//        List<Locus> loci = new ArrayList<Locus>();
-//        locus.setAnnotation(nota);
-//        loci.add(locus);
+        BaseExtension ex = nota.getExtension();
+        ex.setField1("nota");
+        //        List<Locus> loci = new ArrayList<Locus>();
+        //        locus.setAnnotation(nota);
+        //        loci.add(locus);
         locus.setAnnotation(nota);
         nota.setLoci(new ArrayList<Locus>());
         nota.getLoci().add(locus);
@@ -67,21 +73,37 @@ public class Tester {
         session.save(nota);
         session.getTransaction().commit();
 
-//        Note note = new Note();
-//        note.setField1("Ciao");
-//        note.setField2("Bello");
-//
-//        Annotation<Note> annotation = new Annotation<>();
-//        annotation.setExtension(note);
-//        annotation.setLocus(new ArrayList<Locus>());
-//        annotation.getLocus().add(locus);
-//        
-//        locus.setAnnotation(annotation);
-//
-//        session.save(annotation);
-//
-//        session.getTransaction().commit();
+        //        Note note = new Note();
+        //        note.setField1("Ciao");
+        //        note.setField2("Bello");
+        //
+        //        Annotation<Note> annotation = new Annotation<>();
+        //        annotation.setExtension(note);
+        //        annotation.setLocus(new ArrayList<Locus>());
+        //        annotation.getLocus().add(locus);
+        //        
+        //        locus.setAnnotation(annotation);
+        //
+        //        session.save(annotation);
+        //
+        //        session.getTransaction().commit();
     }
+
+    private void test2_1() throws InstantiationException, IllegalAccessException {
+        Session session = Neo4jSessionFactory.getNeo4jSession();
+        session.beginTransaction();
+
+        Annotation annotation = session.load(Annotation.class, 32l);
+        TextContent content = new TextContent();
+
+        content.setText("Bobbemalle");
+        annotation.setContent(content);
+
+        session.save(annotation);
+        session.getTransaction().commit();
+
+    }
+    /**/
 
     private void test3() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -89,115 +111,90 @@ public class Tester {
         System.err.println("in test tre");
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
-//
-//        TextContent content = session.load(TextContent.class, 1l);
-        Annotation annotation = session.load(Annotation.class, 19l);
-//        TextLocus l = session.load(TextLocus.class, 7l);
-//        
+
+        Annotation annotation = session.load(Annotation.class, 32l, 5);
+
         System.err.println(annotation.toString());
 
-        Annotation.Extension ex = annotation.getExtension();
-
-        System.err.println(ex.toString()); // questa funziona!
-
-        //   Locus l = ((TextLocus) annotation.getLoci().get(0));
-        //  System.err.println(l.toString());
         TextLocus locus = new TextLocus();
         List<Locus> loci = annotation.getLoci();
         Locus l = loci.get(0);
-        TextContent content = (TextContent) l.getContent();
-        locus.setContent(content);
+        Source source = l.getSource();
+        System.err.println("source " + source.toString());
+        System.err.println("source.getcontent (" + source.getContent() + ")");
+        TextContent content = (TextContent) source.getContent();
+        System.err.println("content: " + content.getText());
+        locus.setSource(source);
         locus.setAnnotation(annotation);
         locus.setStart(6);
         locus.setEnd(12);
-//        
+        //        
         annotation.getLoci().add(locus);
         session.save(annotation);
         session.getTransaction().commit();
 
-//        session.getTransaction().close();
+        //        session.getTransaction().close();
     }
+    /**/
 
-    private void test4() {
+    private void test4() throws InstantiationException, IllegalAccessException {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         System.err.println("in test 4");
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
-//
-        Annotation annotation = session.load(Annotation.class, 19l);
+        //
+        Annotation annotation = session.load(Annotation.class, 32l);
 
-        Annotation.register(BaseExtension.class, new BaseExtension()); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<BaseExtension> nota2 = Annotation.newInstance(BaseExtension.class);
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> nota2 = Annotation.newAnnotation(Tester.BASE);
 
-        Annotation.Extension ex = nota2.getExtension();
-        BaseExtension bex = (BaseExtension) ex;
+        BaseExtension bex = nota2.getExtension();
 
-        bex.setField1("nota2");
+        bex.setField1("nota2 che annota nota");
 
         Relation rel = new Relation();
 
         rel.setSourceAnnotation(nota2);
         rel.setTargetAnnotation(annotation);
         rel.setRelType(Relation.RelationType.BASE);
+
         nota2.setRelations(new ArrayList<Relation>());
         nota2.getRelations().add(rel);
+
         session.save(nota2);
         session.getTransaction().commit();
 
     }
+    /**/
 
-    private void test5() {
+    private void test5() throws InstantiationException, IllegalAccessException {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         System.err.println("in test 5");
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Annotation annotation = session.load(Annotation.class, 19l);
+        Annotation<TextContent, BaseExtension> annotationTarget = session.load(Annotation.class, 32l);
+        System.err.println("content " + annotationTarget.getContent().getText());
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> annotationSource = Annotation.newAnnotation(Tester.BASE);
 
-        Annotation.register(ContentExtension.class, new ContentExtension()); //MODIFICARE in (TIPO, CLASSE)
-        Annotation.register(BaseExtension.class, new BaseExtension()); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<ContentExtension> contentNote = Annotation.newInstance(ContentExtension.class);
+        BaseExtension bex = annotationSource.getExtension();
 
-        Annotation.Extension ex = contentNote.getExtension();
-        ContentExtension cex = (ContentExtension) ex;
-
-        TextContent text = new TextContent();
-        text.setText("Testo della nota che annota l'annotazione");
-        cex.setContent(text);
-
-        contentNote.setExtension(cex);
-        contentNote.setRelations(new ArrayList<Relation>());
-
-        Relation rel = new Relation();
-
-        rel.setRelType(Relation.RelationType.BASE);
-        rel.setSourceAnnotation(contentNote);
-        rel.setTargetAnnotation(annotation);
-        contentNote.getRelations().add(rel);
-
-        Annotation<BaseExtension> baseNote = Annotation.newInstance(BaseExtension.class);
-        baseNote.getExtension().setField1("Annotazione al content di una annotazione");
+        bex.setField1("nota che annota il content di una nota");
 
         TextLocus locus = new TextLocus();
 
-        locus.setContent((TextContent) contentNote.getExtension().getContent());
-        locus.setAnnotation(baseNote);
+        locus.setSource(annotationTarget);
+        locus.setAnnotation(annotationSource);
         locus.setStart(7);
         locus.setEnd(20);
-//        
-        baseNote.setLoci(new ArrayList<Locus>());
-        baseNote.getLoci().add(locus);
-        baseNote.setRelations(new ArrayList<Relation>());
-        Relation rel2 = new Relation();
+        //        
+        annotationSource.setLoci(new ArrayList<Locus>());
+        annotationSource.getLoci().add(locus);
 
-        rel2.setRelType(Relation.RelationType.BASE);
-        rel2.setSourceAnnotation(baseNote);
-        rel2.setTargetAnnotation(contentNote);
-
-        baseNote.getRelations().add(rel2);
-        session.save(baseNote);
+        session.save(annotationSource);
         session.getTransaction().commit();
 
     }
