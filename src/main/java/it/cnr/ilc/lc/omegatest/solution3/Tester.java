@@ -11,8 +11,10 @@ import org.neo4j.ogm.session.Session;
  */
 public class Tester {
 
-    public final static String TEXTCONTENT = "La mi' fava sa di menta chi l'assaggia 'un se ne penta";
-    public final static String BASE = "BaseExtension";
+    public static final String TEXTCONTENT = "Il contenuto della risorsa principale";
+    public static final String BASE = "BaseExtension";
+    public static final String NOTA = "il contenuto di una nota";
+    public static final String TESTO = "un contenuto generico";
 
     public static void main(String[] args) throws InstantiationException, IllegalAccessException {
         Tester tester = new Tester();
