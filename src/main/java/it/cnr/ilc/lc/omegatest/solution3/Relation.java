@@ -9,19 +9,24 @@ import org.neo4j.ogm.annotation.StartNode;
  * @author oakgen
  * @param <T>
  */
-
-
 @RelationshipEntity
-public class Relation extends SuperNode{
+public class Relation<T extends Relation.Extension> extends SuperNode {
 
-   
+    private T extension;
+
+    public T getExtension() {
+        return extension;
+    }
+
+    public void setExtension(T extension) {
+        this.extension = extension;
+    }
+
     @StartNode
     private Annotation sourceAnnotation;
-    
+
     @EndNode
     private Annotation targetAnnotation;
-    
-    private RelationType relType;
 
     public Annotation getTargetAnnotation() {
         return targetAnnotation;
@@ -38,17 +43,8 @@ public class Relation extends SuperNode{
     public void setSourceAnnotation(Annotation sourceAnnotation) {
         this.sourceAnnotation = sourceAnnotation;
     }
-       
-    public static enum RelationType{
-        BASE, PART, ALL
-    }
 
-    public RelationType getRelType() {
-        return relType;
-    }
+    public abstract static class Extension {
 
-    public void setRelType(RelationType relType) {
-        this.relType = relType;
     }
-
 }

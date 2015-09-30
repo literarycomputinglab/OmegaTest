@@ -9,7 +9,7 @@ package it.cnr.ilc.lc.omegatest.solution3;
  *
  * @author angelo
  */
-public class BaseExtension extends Annotation.Extension {
+public class BaseAnnotatioExtension extends Annotation.Extension {
     
     private String field1;
 

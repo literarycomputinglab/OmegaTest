@@ -12,6 +12,7 @@ import org.neo4j.ogm.annotation.Relationship;
  *
  * @author oakgen
  * @param <T>
+ * @param <E>
  */
 @NodeEntity
 public final class Annotation<T extends Content, E extends Annotation.Extension> extends Source<T> {
@@ -52,39 +53,38 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
     }
 
     public static abstract class Extension extends SuperNode {
-        
+
     }
 
     private static final Map<String, Class<? extends Annotation.Extension>> LOOKUP_TABLE = new HashMap<>();
 
     public static void register(String type, Class<? extends Annotation.Extension> clazz) {
-        LOOKUP_TABLE.put(type,clazz);
+        LOOKUP_TABLE.put(type, clazz);
     }
 
-    
-       public static <T extends Content, E extends Annotation.Extension> Annotation<T,E> newAnnotation(String type) throws InstantiationException, IllegalAccessException {
-           
+    public static <T extends Content, E extends Annotation.Extension> Annotation<T, E> newAnnotation(String type) throws InstantiationException, IllegalAccessException {
+
         try {
-            Annotation<T,E> annotation = new Annotation<>();
+            Annotation<T, E> annotation = new Annotation<>();
             Class<?> c = LOOKUP_TABLE.get(type);
-            if (null == c)  {
+            if (null == c) {
                 throw new NullPointerException("No implementation found for type " + type);
             }
             E extension = (E) c.newInstance();
             annotation.setExtension(extension);
             return annotation;
-        } catch (InstantiationException | IllegalAccessException ex ) {
+        } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Annotation.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
     }
 
-       /*
-    public static <E extends Annotation.Extension> Annotation<E> newInstance(Class<E> clazz) {
-        Annotation<E> annotation = new Annotation<>();
-        E extension = (E) LOOKUP_TABLE.get(clazz);
-        annotation.setExtension(extension);
-        return annotation;
-    }
-*/
+    /*
+     public static <E extends Annotation.Extension> Annotation<E> newInstance(Class<E> clazz) {
+     Annotation<E> annotation = new Annotation<>();
+     E extension = (E) LOOKUP_TABLE.get(clazz);
+     annotation.setExtension(extension);
+     return annotation;
+     }
+     */
 }
