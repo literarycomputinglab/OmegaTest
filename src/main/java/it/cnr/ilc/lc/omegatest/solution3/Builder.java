@@ -9,16 +9,8 @@ package it.cnr.ilc.lc.omegatest.solution3;
  *
  * @author angelo
  */
-public class BaseAnnotatioExtension extends Annotation.Extension {
+public interface Builder<T extends Annotation.Extension> {
     
-    private String field1;
-
-    public String getField1() {
-        return field1;
-    }
-
-    public void setField1(String field1) {
-        this.field1 = field1;
-    }
+    public T build(T extension);
     
 }

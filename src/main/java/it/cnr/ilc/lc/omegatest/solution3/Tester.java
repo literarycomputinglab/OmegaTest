@@ -34,7 +34,11 @@ public class Tester {
         tester.test4();
 
         /* crea annotazione di content di annotazione */
-//        tester.test5();
+        //tester.test5();
+        
+        /* test builder */
+        tester.test6();
+        
     }
 
     private void test1() {
@@ -61,14 +65,14 @@ public class Tester {
         locus.setStart(5);
         locus.setEnd(10);
 
-        Annotation.register(Tester.BASE, BaseAnnotatioExtension.class); //operazione fatta dal microkernel
-        Annotation<TextContent, BaseAnnotatioExtension> nota = Annotation.newAnnotation(Tester.BASE);
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> nota = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("nota"));
 
         System.err.println(nota.toString());
-
-        BaseAnnotatioExtension ex = nota.getExtension(); // gestione della parte di estensione tramite builder
-        ex.setField1("nota");
-        //        List<Locus> loci = new ArrayList<Locus>();
+//
+//        BaseExtension ex = nota.getExtension();
+//        ex.setField1("nota");
+//          List<Locus> loci = new ArrayList<Locus>();
         //        locus.setAnnotation(nota);
         //        loci.add(locus);
         locus.setAnnotation(nota);
@@ -99,7 +103,7 @@ public class Tester {
         session.beginTransaction();
 
         // load ha bisogno di riparametrizzare i generics
-        Annotation<TextContent, BaseAnnotatioExtension> annotation = session.load(Annotation.class, ANNOTATION_ID);
+        Annotation<TextContent, BaseExtension> annotation = session.load(Annotation.class, ANNOTATION_ID);
         TextContent content = new TextContent();
 
         content.setText(Tester.TESTO);
@@ -152,12 +156,12 @@ public class Tester {
         //
         Annotation annotation = session.load(Annotation.class, ANNOTATION_ID);
 
-        Annotation.register(Tester.BASE, BaseAnnotatioExtension.class); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<TextContent, BaseAnnotatioExtension> nota2 = Annotation.newAnnotation(Tester.BASE);
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> nota2 = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("nota2 che annota nota"));
 
-        BaseAnnotatioExtension bex = nota2.getExtension();
-
-        bex.setField1("nota2 che annota nota");
+//        BaseExtension bex = nota2.getExtension();
+//
+//        bex.setField1("nota2 che annota nota");
 
         Relation<BaseRelationExtension> rel = new Relation<>();
 
@@ -185,14 +189,13 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Annotation<TextContent, BaseAnnotatioExtension> annotationTarget = session.load(Annotation.class, 1l);
+        Annotation<TextContent, BaseExtension> annotationTarget = session.load(Annotation.class, 1l);
         System.err.println("content " + annotationTarget.getContent().getText());
-        Annotation.register(Tester.BASE, BaseAnnotatioExtension.class); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<TextContent, BaseAnnotatioExtension> annotationSource = Annotation.newAnnotation(Tester.BASE);
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> annotationSource = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("nota che annota il content di una nota"));
 
-        BaseAnnotatioExtension bex = annotationSource.getExtension();
-
-        bex.setField1("nota che annota il content di una nota");
+//        BaseExtension bex = annotationSource.getExtension();
+//        bex.setField1("nota che annota il content di una nota");
 
         TextLocus locus = new TextLocus();
 
@@ -207,6 +210,43 @@ public class Tester {
         session.save(annotationSource);
         session.getTransaction().commit();
 
+    }
+
+    private void test6() throws InstantiationException, IllegalAccessException {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Session session = Neo4jSessionFactory.getNeo4jSession();
+        session.beginTransaction();
+
+        Source<TextContent> source = new Source();
+        source.setContent(new TextContent());
+        source.getContent().setText(Tester.TEXTCONTENT);
+        session.save(source);
+
+        
+        
+        TextLocus locus = new TextLocus();
+        locus.setSource(source);
+        
+        locus.setStart(5);
+        locus.setEnd(10);
+
+        Annotation.register(Tester.BASE, BaseExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseExtension> nota = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("con builder"));
+
+        System.err.println(nota.toString());
+
+        /* tolta la costruzione della nota*/
+        //BaseExtension ex = nota.getExtension();
+        //ex.setField1("nota");
+        
+        locus.setAnnotation(nota);
+        
+        nota.setLoci(new ArrayList<Locus>());
+        nota.getLoci().add(locus);
+
+        session.save(nota);
+        session.getTransaction().commit();
+        
     }
 
 }

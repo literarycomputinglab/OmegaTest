@@ -25,4 +25,9 @@ public class Note extends Annotation.Extension {
         this.field2 = field2;
     }
 
+    @Override
+    public <T extends Annotation.Extension> T build(Builder<T> builder) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
