@@ -9,7 +9,7 @@ package it.cnr.ilc.lc.omegatest.solution3;
  *
  * @author angelo
  */
-public class BaseExtensionBuilder implements Builder<BaseExtension>{
+public class BaseExtensionBuilder implements Builder<BaseAnnotationExtension>{
 
     private String field1 = "";
         
@@ -19,7 +19,7 @@ public class BaseExtensionBuilder implements Builder<BaseExtension>{
     }
         
     @Override
-    public BaseExtension build(BaseExtension extension) {
+    public BaseAnnotationExtension build(BaseAnnotationExtension extension) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         extension.setField1(this.field1);
         return extension;

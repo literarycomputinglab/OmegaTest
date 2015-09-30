@@ -9,9 +9,9 @@ package it.cnr.ilc.lc.omegatest.solution3;
  *
  * @author angelo
  */
-public class BaseExtension extends Annotation.Extension {
+public class BaseAnnotationExtension extends Annotation.Extension {
 
-    private transient Builder<BaseExtension> builder;
+    private transient Builder<BaseAnnotationExtension> builder;
     private String field1;
 
     public String getField1() {
@@ -24,7 +24,7 @@ public class BaseExtension extends Annotation.Extension {
 
     @Override
     public <T extends Annotation.Extension> T build(Builder<T> builder) {
-        this.builder = (Builder<BaseExtension>) builder;
+        this.builder = (Builder<BaseAnnotationExtension>) builder;
         return (T) this.builder.build(this);
     }
 
