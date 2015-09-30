@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.lc.omegatest.solution3;
+package it.cnr.ilc.lc.omegatest.solution3.example;
+
+import it.cnr.ilc.lc.omegatest.solution3.Annotation;
 
 /**
  *
@@ -11,9 +13,8 @@ package it.cnr.ilc.lc.omegatest.solution3;
  */
 public class BaseAnnotationExtension extends Annotation.Extension {
 
-    private transient Builder<BaseAnnotationExtension> builder;
     private String field1;
-
+    
     public String getField1() {
         return field1;
     }
@@ -22,10 +23,10 @@ public class BaseAnnotationExtension extends Annotation.Extension {
         this.field1 = field1;
     }
 
-    @Override
-    public <T extends Annotation.Extension> T build(Builder<T> builder) {
-        this.builder = (Builder<BaseAnnotationExtension>) builder;
-        return (T) this.builder.build(this);
-    }
+//    @Override
+//    public <T extends Annotation.Extension> T build(Builder<T> builder) {
+//        this.builder = (Builder<BaseAnnotationExtension>) builder;
+//        return (T) this.builder.build(this);
+//    }
 
 }

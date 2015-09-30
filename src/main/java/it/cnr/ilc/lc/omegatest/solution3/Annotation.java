@@ -19,6 +19,9 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
 
     private E extension;
 
+    private Annotation() {
+    }
+
     @Relationship(type = "TEXTLOCUS") //WARN FORZATO TEXTLOCUS: BUG APERTO SU NEO4J
     private List<Locus> loci;
 
@@ -33,14 +36,11 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
     @Relationship(type = "RELATION")
     private List<Relation> relations;
 
-    public Annotation() {
-    }
-
     public E getExtension() {
         return extension;
     }
 
-    public void setExtension(E extension) {
+    private void setExtension(E extension) {
         this.extension = extension;
     }
 
@@ -53,7 +53,13 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
     }
 
     public static abstract class Extension extends SuperNode {
-        public abstract <T extends Extension> T build(Builder<T> builder);
+
+        protected Extension() {
+        }
+
+        <T extends Extension> T build(Builder<T> builder) {
+            return builder.build((T) this);
+        }
     }
 
     private static final Map<String, Class<? extends Annotation.Extension>> LOOKUP_TABLE = new HashMap<>();
@@ -62,9 +68,8 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
         LOOKUP_TABLE.put(type, clazz);
     }
 
-    
-       public static <T extends Content, E extends Annotation.Extension> Annotation<T,E> newAnnotation(String type, Builder<E> builder) throws InstantiationException, IllegalAccessException {
-           
+    public static <T extends Content, E extends Annotation.Extension> Annotation<T, E> newAnnotation(String type, Builder<E> builder) throws InstantiationException, IllegalAccessException {
+
         try {
             Annotation<T, E> annotation = new Annotation<>();
             Class<?> c = LOOKUP_TABLE.get(type);
@@ -73,7 +78,7 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
             }
             E extension = (E) c.newInstance();
             annotation.setExtension(extension.build(builder));
-                   
+
             return annotation;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(Annotation.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,12 +86,4 @@ public final class Annotation<T extends Content, E extends Annotation.Extension>
         }
     }
 
-    /*
-     public static <E extends Annotation.Extension> Annotation<E> newInstance(Class<E> clazz) {
-     Annotation<E> annotation = new Annotation<>();
-     E extension = (E) LOOKUP_TABLE.get(clazz);
-     annotation.setExtension(extension);
-     return annotation;
-     }
-     */
 }

@@ -1,4 +1,6 @@
-package it.cnr.ilc.lc.omegatest.solution3;
+package it.cnr.ilc.lc.omegatest.solution3.example;
+
+import it.cnr.ilc.lc.omegatest.solution3.Annotation;
 
 /**
  *
@@ -23,11 +25,6 @@ public class Note extends Annotation.Extension {
 
     public void setField2(String field2) {
         this.field2 = field2;
-    }
-
-    @Override
-    public <T extends Annotation.Extension> T build(Builder<T> builder) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

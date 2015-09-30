@@ -12,11 +12,13 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * @author simone
  * @param <T>
  */
-
 @NodeEntity
 public class Source<T extends Content> extends SuperNode {
 
     private T content;
+
+    protected Source() {
+    }
 
     public T getContent() {
         return content;
@@ -24,5 +26,9 @@ public class Source<T extends Content> extends SuperNode {
 
     public void setContent(T content) {
         this.content = content;
+    }
+    
+    public static <T extends Content> Source<T> sourecOf(Class<T> clazz) {
+        return new Source<>();
     }
 }

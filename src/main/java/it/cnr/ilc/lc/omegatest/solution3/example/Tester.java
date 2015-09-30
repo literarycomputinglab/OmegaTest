@@ -1,6 +1,13 @@
-package it.cnr.ilc.lc.omegatest.solution3;
+package it.cnr.ilc.lc.omegatest.solution3.example;
 
 import it.cnr.ilc.lc.omegatest.Neo4jSessionFactory;
+import it.cnr.ilc.lc.omegatest.solution3.Annotation;
+import it.cnr.ilc.lc.omegatest.solution3.Locus;
+import it.cnr.ilc.lc.omegatest.solution3.Relation;
+import it.cnr.ilc.lc.omegatest.solution3.RelationType;
+import it.cnr.ilc.lc.omegatest.solution3.Source;
+import it.cnr.ilc.lc.omegatest.solution3.TextContent;
+import it.cnr.ilc.lc.omegatest.solution3.TextLocus;
 import java.util.ArrayList;
 import java.util.List;
 import org.neo4j.ogm.session.Session;
@@ -10,7 +17,7 @@ import org.neo4j.ogm.session.Session;
  * @author oakgen
  */
 public class Tester {
-    
+
     private static final Long SOURCE_ID = 7l;
     private static final Long ANNOTATION_ID = 9l;
 
@@ -31,21 +38,20 @@ public class Tester {
 //         tester.test3();
 
         /* crea annotazione di annotazioni */
-        tester.test4();
+//        tester.test4();
 
         /* crea annotazione di content di annotazione */
         //tester.test5();
-        
         /* test builder */
         tester.test6();
-        
+
     }
 
     private void test1() {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Source<TextContent> source = new Source<>();
+        Source<TextContent> source = Source.sourecOf(TextContent.class);
         source.setContent(new TextContent());
         source.getContent().setText(Tester.TEXTCONTENT);
         session.save(source);
@@ -162,19 +168,14 @@ public class Tester {
 //        BaseExtension bex = nota2.getExtension();
 //
 //        bex.setField1("nota2 che annota nota");
-
-        Relation<BaseRelationExtension> rel = new Relation<>();
-
-        rel.setSourceAnnotation(nota2);
-        rel.setTargetAnnotation(annotation);
-
-        BaseRelationExtension bre = new BaseRelationExtension();
-        bre.setField1("base type relation");
-        
-        rel.setExtension(bre);
-        
+//        Relation<BaseRelationExtension> rel = new Relation<>();
+//        rel.setSourceAnnotation(nota2);
+//        rel.setTargetAnnotation(annotation);
+//        BaseRelationExtension bre = new BaseRelationExtension();
+//        bre.setField1("base type relation");
+//        rel.setExtension(bre);
         nota2.setRelations(new ArrayList<Relation>());
-        nota2.getRelations().add(rel);
+//        nota2.getRelations().add(rel);
 
         session.save(nota2);
         session.getTransaction().commit();
@@ -196,7 +197,6 @@ public class Tester {
 
 //        BaseExtension bex = annotationSource.getExtension();
 //        bex.setField1("nota che annota il content di una nota");
-
         TextLocus locus = new TextLocus();
 
         locus.setSource(annotationTarget);
@@ -217,16 +217,14 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Source<TextContent> source = new Source();
+        Source<TextContent> source = Source.sourecOf(TextContent.class);
         source.setContent(new TextContent());
         source.getContent().setText(Tester.TEXTCONTENT);
         session.save(source);
 
-        
-        
         TextLocus locus = new TextLocus();
         locus.setSource(source);
-        
+
         locus.setStart(5);
         locus.setEnd(10);
 
@@ -238,15 +236,26 @@ public class Tester {
         /* tolta la costruzione della nota*/
         //BaseExtension ex = nota.getExtension();
         //ex.setField1("nota");
-        
         locus.setAnnotation(nota);
-        
+
         nota.setLoci(new ArrayList<Locus>());
         nota.getLoci().add(locus);
 
-        session.save(nota);
-        session.getTransaction().commit();
+        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("con builder per nota 2"));
+
+
         
+        Relation relation = new Relation();
+        relation.setType(RelationTypes.PART_OF);
+        relation.setSourceAnnotation(nota2);
+        relation.setTargetAnnotation(nota);
+        nota2.setRelations(new ArrayList<Relation>());
+        nota2.getRelations().add(relation);
+        
+        session.save(nota);
+        session.save(nota2);
+        session.getTransaction().commit();
+
     }
 
 }

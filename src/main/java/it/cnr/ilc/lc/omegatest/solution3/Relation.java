@@ -7,20 +7,9 @@ import org.neo4j.ogm.annotation.StartNode;
 /**
  *
  * @author oakgen
- * @param <T>
  */
 @RelationshipEntity
-public class Relation<T extends Relation.Extension> extends SuperNode {
-
-    private T extension;
-
-    public T getExtension() {
-        return extension;
-    }
-
-    public void setExtension(T extension) {
-        this.extension = extension;
-    }
+public class Relation extends SuperNode {
 
     @StartNode
     private Annotation sourceAnnotation;
@@ -44,7 +33,14 @@ public class Relation<T extends Relation.Extension> extends SuperNode {
         this.sourceAnnotation = sourceAnnotation;
     }
 
-    public abstract static class Extension {
+    private String type;
 
+    public String getType() {
+        return type;
     }
+
+    public void setType(Enum type) {
+        this.type = type.name();
+    }
+
 }

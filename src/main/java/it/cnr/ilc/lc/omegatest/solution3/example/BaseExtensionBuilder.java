@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.lc.omegatest.solution3;
+package it.cnr.ilc.lc.omegatest.solution3.example;
+
+import it.cnr.ilc.lc.omegatest.solution3.Builder;
 
 /**
  *
@@ -20,7 +22,6 @@ public class BaseExtensionBuilder implements Builder<BaseAnnotationExtension>{
         
     @Override
     public BaseAnnotationExtension build(BaseAnnotationExtension extension) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         extension.setField1(this.field1);
         return extension;
     }

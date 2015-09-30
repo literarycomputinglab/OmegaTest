@@ -8,9 +8,10 @@ package it.cnr.ilc.lc.omegatest.solution3;
 /**
  *
  * @author angelo
+ * @param <T>
  */
 public interface Builder<T extends Annotation.Extension> {
     
-    public T build(T extension);
+     T build(T extension);
     
 }
