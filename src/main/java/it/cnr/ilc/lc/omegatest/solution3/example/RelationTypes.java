@@ -1,7 +1,3 @@
-/*
- * Copyright 2013 Oakgen. All rights reserved.
- * Oakgen PROPRIETARY/CONFIDENTIAL. Use this subject to license terms.
- */
 package it.cnr.ilc.lc.omegatest.solution3.example;
 
 import it.cnr.ilc.lc.omegatest.solution3.RelationType;
