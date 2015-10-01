@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.cnr.ilc.lc.omegatest.solution3.example;
+package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omegatest.solution3.Builder;
+import entity.Builder;
 
 /**
  *

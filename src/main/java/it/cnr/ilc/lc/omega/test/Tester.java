@@ -1,15 +1,11 @@
-package it.cnr.ilc.lc.omegatest.solution3.example;
+package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omegatest.Neo4jSessionFactory;
-import it.cnr.ilc.lc.omegatest.solution3.Annotation;
-import it.cnr.ilc.lc.omegatest.solution3.Locus;
-import it.cnr.ilc.lc.omegatest.solution3.Relation;
-import it.cnr.ilc.lc.omegatest.solution3.RelationType;
-import it.cnr.ilc.lc.omegatest.solution3.Source;
-import it.cnr.ilc.lc.omegatest.solution3.TextContent;
-import it.cnr.ilc.lc.omegatest.solution3.TextLocus;
-import java.util.ArrayList;
-import java.util.List;
+import entity.Annotation;
+import entity.Locus;
+import entity.Relation;
+import entity.Source;
+import entity.TextContent;
+import entity.TextLocus;
 import org.neo4j.ogm.session.Session;
 
 /**
@@ -26,7 +22,7 @@ public class Tester {
     public static final String NOTA = "il contenuto di una nota";
     public static final String TESTO = "un contenuto generico";
 
-    public static void main(String[] args) throws InstantiationException, IllegalAccessException {
+    public static void main(String[] args) {
         Tester tester = new Tester();
 
         /* crea il nodo content*/
@@ -60,7 +56,7 @@ public class Tester {
     }
 
     /**/
-    private void test2() throws InstantiationException, IllegalAccessException {
+    private void test2() {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
@@ -82,8 +78,7 @@ public class Tester {
         //        locus.setAnnotation(nota);
         //        loci.add(locus);
         locus.setAnnotation(nota);
-        nota.setLoci(new ArrayList<Locus>());
-        nota.getLoci().add(locus);
+        nota.addLocus(locus);
 
         session.save(nota);
         session.getTransaction().commit();
@@ -104,7 +99,7 @@ public class Tester {
         //        session.getTransaction().commit();
     }
 
-    private void test2_1() throws InstantiationException, IllegalAccessException {
+    private void test2_1() {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
@@ -128,13 +123,12 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Annotation annotation = session.load(Annotation.class, ANNOTATION_ID, 5);
+        Annotation<TextContent, BaseAnnotationExtension> annotation = session.load(Annotation.class, ANNOTATION_ID, 5);
 
         System.err.println(annotation.toString());
 
         TextLocus locus = new TextLocus();
-        List<Locus> loci = annotation.getLoci();
-        Locus l = loci.get(0);
+        Locus l = annotation.getLoci().next();
         Source source = l.getSource();
         System.err.println("source " + source.toString());
         System.err.println("source.getcontent (" + source.getContent() + ")");
@@ -145,7 +139,7 @@ public class Tester {
         locus.setStart(6);
         locus.setEnd(12);
         //        
-        annotation.getLoci().add(locus);
+        annotation.addLocus(locus);
         session.save(annotation);
         session.getTransaction().commit();
 
@@ -153,7 +147,7 @@ public class Tester {
     }
     /**/
 
-    private void test4() throws InstantiationException, IllegalAccessException {
+    private void test4() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         System.err.println("in test 4");
@@ -174,16 +168,15 @@ public class Tester {
 //        BaseRelationExtension bre = new BaseRelationExtension();
 //        bre.setField1("base type relation");
 //        rel.setExtension(bre);
-        nota2.setRelations(new ArrayList<Relation>());
+//        nota2.addRelation(rel);
 //        nota2.getRelations().add(rel);
-
         session.save(nota2);
         session.getTransaction().commit();
 
     }
     /**/
 
-    private void test5() throws InstantiationException, IllegalAccessException {
+    private void test5() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         System.err.println("in test 5");
@@ -203,16 +196,14 @@ public class Tester {
         locus.setAnnotation(annotationSource);
         locus.setStart(7);
         locus.setEnd(20);
-        //        
-        annotationSource.setLoci(new ArrayList<Locus>());
-        annotationSource.getLoci().add(locus);
+        annotationSource.addLocus(locus);
 
         session.save(annotationSource);
         session.getTransaction().commit();
 
     }
 
-    private void test6() throws InstantiationException, IllegalAccessException {
+    private void test6() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
@@ -238,20 +229,20 @@ public class Tester {
         //ex.setField1("nota");
         locus.setAnnotation(nota);
 
-        nota.setLoci(new ArrayList<Locus>());
-        nota.getLoci().add(locus);
+        nota.addLocus(locus);
 
-        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("con builder per nota 2"));
+        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(
+                Tester.BASE,
+                new BaseExtensionBuilder()
+                .field1("con builder per nota 2")
+        );
 
-
-        
         Relation relation = new Relation();
         relation.setType(RelationTypes.PART_OF);
         relation.setSourceAnnotation(nota2);
         relation.setTargetAnnotation(nota);
-        nota2.setRelations(new ArrayList<Relation>());
-        nota2.getRelations().add(relation);
-        
+        nota2.addRelation(relation);
+
         session.save(nota);
         session.save(nota2);
         session.getTransaction().commit();

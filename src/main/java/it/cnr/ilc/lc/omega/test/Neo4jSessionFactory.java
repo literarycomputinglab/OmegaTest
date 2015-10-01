@@ -1,4 +1,4 @@
-package it.cnr.ilc.lc.omegatest;
+package it.cnr.ilc.lc.omega.test;
 
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;

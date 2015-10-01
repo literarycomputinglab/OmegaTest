@@ -1,6 +1,6 @@
-package it.cnr.ilc.lc.omegatest.solution3.example;
+package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omegatest.solution3.RelationType;
+import entity.RelationType;
 
 /**
  *

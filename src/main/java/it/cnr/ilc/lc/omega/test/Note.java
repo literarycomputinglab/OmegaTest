@@ -1,6 +1,6 @@
-package it.cnr.ilc.lc.omegatest.solution3.example;
+package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omegatest.solution3.Annotation;
+import entity.Annotation;
 
 /**
  *
