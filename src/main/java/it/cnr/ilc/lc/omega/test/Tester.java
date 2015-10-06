@@ -1,11 +1,12 @@
 package it.cnr.ilc.lc.omega.test;
 
-import entity.Annotation;
-import entity.Locus;
-import entity.Relation;
-import entity.Source;
-import entity.TextContent;
-import entity.TextLocus;
+import it.cnr.ilc.lc.omega.entity.Annotation;
+import it.cnr.ilc.lc.omega.entity.Content;
+import it.cnr.ilc.lc.omega.entity.Locus;
+import it.cnr.ilc.lc.omega.entity.Relation;
+import it.cnr.ilc.lc.omega.entity.Source;
+import it.cnr.ilc.lc.omega.entity.TextContent;
+import it.cnr.ilc.lc.omega.entity.TextLocus;
 import org.neo4j.ogm.session.Session;
 
 /**
@@ -47,7 +48,7 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Source<TextContent> source = Source.sourecOf(TextContent.class);
+        Source<TextContent> source = Source.sourceOf(TextContent.class);
         source.setContent(new TextContent());
         source.getContent().setText(Tester.TEXTCONTENT);
         session.save(source);
@@ -208,12 +209,13 @@ public class Tester {
         Session session = Neo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
 
-        Source<TextContent> source = Source.sourecOf(TextContent.class);
-        source.setContent(new TextContent());
+        Source<TextContent> source = Source.sourceOf(TextContent.class);
+        source.setContent(Content.contentOf(TextContent.class));
         source.getContent().setText(Tester.TEXTCONTENT);
         session.save(source);
 
-        TextLocus locus = new TextLocus();
+        TextLocus locus = Locus.locusOf(TextLocus.class);
+       // TextLocus locus = new TextLocus();
         locus.setSource(source);
 
         locus.setStart(5);
@@ -237,8 +239,7 @@ public class Tester {
                 .field1("con builder per nota 2")
         );
 
-        Relation relation = new Relation();
-        relation.setType(RelationTypes.PART_OF);
+        Relation relation = Relation.newInstance(RelationTypes.PART_OF);
         relation.setSourceAnnotation(nota2);
         relation.setTargetAnnotation(nota);
         nota2.addRelation(relation);

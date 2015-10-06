@@ -5,7 +5,7 @@
  */
 package it.cnr.ilc.lc.omega.test;
 
-import entity.Annotation;
+import it.cnr.ilc.lc.omega.entity.Annotation;
 
 /**
  *

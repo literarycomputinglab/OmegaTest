@@ -5,7 +5,7 @@
  */
 package it.cnr.ilc.lc.omega.test;
 
-import entity.Builder;
+import it.cnr.ilc.lc.omega.entity.Builder;
 
 /**
  *

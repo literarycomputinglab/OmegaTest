@@ -1,6 +1,6 @@
 package it.cnr.ilc.lc.omega.test;
 
-import entity.RelationType;
+import it.cnr.ilc.lc.omega.entity.RelationType;
 
 /**
  *
