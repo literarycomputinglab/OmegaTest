@@ -214,7 +214,7 @@ public class Tester {
         source.getContent().setText(Tester.TEXTCONTENT);
         session.save(source);
 
-        TextLocus locus = Locus.locusOf(TextLocus.class);
+        TextLocus locus = Locus.locusOf(TextLocus.class, Locus.PointTo.SOURCE);
        // TextLocus locus = new TextLocus();
         locus.setSource(source);
 
