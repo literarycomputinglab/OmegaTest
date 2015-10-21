@@ -210,10 +210,10 @@ public class Tester {
         try {
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-            InputStream ISImage129r = this.getClass().getClassLoader().getResourceAsStream("129r_mini.jpg");
-            InputStream ISImage129v = this.getClass().getClassLoader().getResourceAsStream("129v_mini.jpg");
-            InputStream ISImage130r = this.getClass().getClassLoader().getResourceAsStream("130r_mini.jpg");
-            InputStream ISImage130v = this.getClass().getClassLoader().getResourceAsStream("130v_mini.jpg");
+            InputStream ISImage129r = this.getClass().getClassLoader().getResourceAsStream("img/129r_mini.jpg");
+            InputStream ISImage129v = this.getClass().getClassLoader().getResourceAsStream("img/129v_mini.jpg");
+            InputStream ISImage130r = this.getClass().getClassLoader().getResourceAsStream("img/130r_mini.jpg");
+            InputStream ISImage130v = this.getClass().getClassLoader().getResourceAsStream("img/130v_mini.jpg");
             
             Session session = Neo4jSessionFactory.getNeo4jSession();
             session.beginTransaction();

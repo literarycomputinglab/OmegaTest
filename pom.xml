@@ -23,6 +23,12 @@
             <artifactId>ClaviusCatalogNeo4j</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>it.cnr.ilc.lc</groupId>
+            <artifactId>OmegaCore</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+       
         
     </dependencies>
 </project>
