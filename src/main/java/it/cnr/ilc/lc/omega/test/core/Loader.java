@@ -34,14 +34,14 @@ public class Loader {
         OmegaCore.start();
          Logger.getLogger(Loader.class.getName()).log(Level.INFO, "Core initializing...");
         try {
-            test();
+            load();
         } catch (MimeTypeParseException ex) {
             Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
         }
         OmegaCore.stop();
     }
 
-    private static void test() throws MimeTypeParseException {
+    private static void load() throws MimeTypeParseException {
         for (String letter : Loader.LETTERS) {
             String path = Loader.BASEPATH + Loader.SEPARATOR + letter;
             URI sourceURI = URI.create(path);
