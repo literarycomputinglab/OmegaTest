@@ -24,7 +24,7 @@ import org.neo4j.ogm.session.Session;
  *
  * @author oakgen
  */
-public class Tester {
+public class TesterOLD {
     
     private static final Long SOURCE_ID = 7l;
     private static final Long ANNOTATION_ID = 9l;
@@ -58,7 +58,7 @@ public class Tester {
     public static final int BUFFER_MAX_SIZE = 1024 * 1024 * 4;
     
     public static void main(String[] args) {
-        Tester tester = new Tester();
+        TesterOLD tester = new TesterOLD();
 
         /* crea il nodo content*/
 //        tester.test1();
@@ -87,7 +87,7 @@ public class Tester {
         
         Source<TextContent> source = Source.sourceOf(TextContent.class);
         source.setContent(Content.contentOf(TextContent.class));
-        source.getContent().setText(Tester.CONTENT_PAGE1_LETTER1);
+        source.getContent().setText(TesterOLD.CONTENT_PAGE1_LETTER1);
         session.save(source);
         
         TextLocus locus = Locus.locusOf(TextLocus.class, Locus.PointsTo.CONTENT);
@@ -97,8 +97,8 @@ public class Tester {
         locus.setStart(5);
         locus.setEnd(10);
         
-        Annotation.register(Tester.BASE, BaseAnnotationExtension.class); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<TextContent, BaseAnnotationExtension> nota = Annotation.newAnnotation(Tester.BASE, new BaseExtensionBuilder().field1("con builder"));
+        Annotation.register(TesterOLD.BASE, BaseAnnotationExtension.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseAnnotationExtension> nota = Annotation.newAnnotation(TesterOLD.BASE, new BaseExtensionBuilder().field1("con builder"));
         
         System.err.println(nota.toString());
 
@@ -109,8 +109,7 @@ public class Tester {
         
         nota.addLocus(locus);
         
-        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(
-                Tester.BASE,
+        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(TesterOLD.BASE,
                 new BaseExtensionBuilder()
                 .field1("con builder per nota 2")
         );
@@ -134,7 +133,7 @@ public class Tester {
 
         Source<TextContent> sourcePage1Letter1 = Source.sourceOf(TextContent.class);
         sourcePage1Letter1.setContent(Content.contentOf(TextContent.class));
-        sourcePage1Letter1.getContent().setText(Tester.CONTENT_PAGE1_LETTER1);
+        sourcePage1Letter1.getContent().setText(TesterOLD.CONTENT_PAGE1_LETTER1);
         TextLocus locus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
         locus.setSource(sourcePage1Letter1);
         Annotation<TextContent, FileAnnotationExtension> page1Letter1 = Annotation.newAnnotation("File", new FileBuilder().name("Source 1"));
@@ -146,7 +145,7 @@ public class Tester {
         
         Source<TextContent> sourcePage2Letter1 = Source.sourceOf(TextContent.class);
         sourcePage2Letter1.setContent(Content.contentOf(TextContent.class));
-        sourcePage2Letter1.getContent().setText(Tester.CONTENT_PAGE2_LETTER1);
+        sourcePage2Letter1.getContent().setText(TesterOLD.CONTENT_PAGE2_LETTER1);
         locus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
         locus.setSource(sourcePage2Letter1);
         Annotation<TextContent, FileAnnotationExtension> page2Letter1 = Annotation.newAnnotation("File", new FileBuilder().name("Source 2"));
@@ -157,7 +156,7 @@ public class Tester {
         
         Source<TextContent> sourcePage1Letter2 = Source.sourceOf(TextContent.class);
         sourcePage1Letter2.setContent(Content.contentOf(TextContent.class));
-        sourcePage1Letter2.getContent().setText(Tester.CONTENT_PAGE1_LETTER2);
+        sourcePage1Letter2.getContent().setText(TesterOLD.CONTENT_PAGE1_LETTER2);
         locus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
         locus.setSource(sourcePage1Letter2);
         Annotation<TextContent, FileAnnotationExtension> page1Letter2 = Annotation.newAnnotation("File", new FileBuilder().name("Source 3"));
@@ -168,7 +167,7 @@ public class Tester {
         
         Source<TextContent> sourcePage2Letter2 = Source.sourceOf(TextContent.class);
         sourcePage2Letter2.setContent(Content.contentOf(TextContent.class));
-        sourcePage2Letter2.getContent().setText(Tester.CONTENT_PAGE2_LETTER2);
+        sourcePage2Letter2.getContent().setText(TesterOLD.CONTENT_PAGE2_LETTER2);
         locus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
         locus.setSource(sourcePage2Letter2);
         Annotation<TextContent, FileAnnotationExtension> page2Letter2 = Annotation.newAnnotation("File", new FileBuilder().name("Source 4"));
@@ -281,7 +280,7 @@ public class Tester {
             
             Source<TextContent> sourceTextLetter = Source.sourceOf(TextContent.class);
             sourceTextLetter.setContent(Content.contentOf(TextContent.class));
-            sourceTextLetter.getContent().setText(Tester.TEXT_LETTER);
+            sourceTextLetter.getContent().setText(TesterOLD.TEXT_LETTER);
             TextLocus textlocus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
             textlocus.setSource(sourceTextLetter);
             Annotation<TextContent, FileAnnotationExtension> TextLetter1 = Annotation.newAnnotation("File", new FileBuilder().name("TextualSource"));
@@ -305,7 +304,7 @@ public class Tester {
             
             session.getTransaction().commit();
         } catch (IOException ex) {
-            Logger.getLogger(Tester.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TesterOLD.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
