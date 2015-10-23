@@ -10,6 +10,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+    
     <dependencies>
                      
         <dependency>
@@ -23,12 +24,18 @@
             <artifactId>ClaviusCatalogNeo4j</artifactId>
             <version>1.0.0</version>
         </dependency>
+        
         <dependency>
             <groupId>it.cnr.ilc.lc</groupId>
             <artifactId>OmegaCore</artifactId>
             <version>1.0.0</version>
         </dependency>
        
-        
+        <dependency>      
+            <groupId>it.cnr.ilc.lc</groupId>
+            <artifactId>ClaviusXMLParser</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    
     </dependencies>
 </project>

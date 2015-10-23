@@ -5,6 +5,7 @@
  */
 package it.cnr.ilc.lc.omega.test.core;
 
+import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.ResourceManager;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 import java.net.URI;
@@ -46,7 +47,11 @@ public class Loader {
             String path = Loader.BASEPATH + Loader.SEPARATOR + letter;
             URI sourceURI = URI.create(path);
             URI contentURI = URI.create(path + Loader.SEPARATOR + letter + Loader.EXT);
-            resourceManager.createSource(sourceURI, new MimeType(Loader.TXTMIME));
+            try {
+                resourceManager.createSource(sourceURI, new MimeType(Loader.TXTMIME));
+            } catch (ManagerAction.ActionException ex) {
+                Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+            }
             resourceManager.setContent(sourceURI, contentURI);
             resourceManager.inFolder(Loader.ARCHIVE, sourceURI);
         }
