@@ -15,7 +15,6 @@ import it.cnr.ilc.lc.omega.entity.TextLocus;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.neo4j.ogm.session.Session;
@@ -82,7 +81,7 @@ public class TesterOLD {
     
     private void test6() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        Session session = Neo4jSessionFactory.getNeo4jSession();
+        Session session = DeprecatedNeo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
         
         Source<TextContent> source = Source.sourceOf(TextContent.class);
@@ -126,7 +125,7 @@ public class TesterOLD {
     }
     
     private void test7() {
-        Session session = Neo4jSessionFactory.getNeo4jSession();
+        Session session = DeprecatedNeo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
         
         Annotation.register("File", FileAnnotationExtension.class); //MODIFICARE in (TIPO, CLASSE)
@@ -214,7 +213,7 @@ public class TesterOLD {
             InputStream ISImage130r = this.getClass().getClassLoader().getResourceAsStream("img/130r_mini.jpg");
             InputStream ISImage130v = this.getClass().getClassLoader().getResourceAsStream("img/130v_mini.jpg");
             
-            Session session = Neo4jSessionFactory.getNeo4jSession();
+            Session session = DeprecatedNeo4jSessionFactory.getNeo4jSession();
             session.beginTransaction();
             Annotation.register("File", FileAnnotationExtension.class);
 
@@ -281,10 +280,11 @@ public class TesterOLD {
             Source<TextContent> sourceTextLetter = Source.sourceOf(TextContent.class);
             sourceTextLetter.setContent(Content.contentOf(TextContent.class));
             sourceTextLetter.getContent().setText(TesterOLD.TEXT_LETTER);
+           
             TextLocus textlocus = Locus.locusOf(TextLocus.class, Locus.PointsTo.SOURCE);
             textlocus.setSource(sourceTextLetter);
             Annotation<TextContent, FileAnnotationExtension> TextLetter1 = Annotation.newAnnotation("File", new FileBuilder().name("TextualSource"));
-            textlocus.setAnnotation(TextLetter1); // ATTENZIONE
+            textlocus.setAnnotation(TextLetter1); // ATTENZIONE prima di fare addLocus deve essere fatta la setAnnotation sul locus
             TextLetter1.addLocus(textlocus);
             
             session.save(TextLetter1);

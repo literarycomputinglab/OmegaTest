@@ -5,13 +5,13 @@
  */
 package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omega.entity.Builder;
+import it.cnr.ilc.lc.omega.entity.AnnotationBuilder;
 
 /**
  *
  * @author angelo
  */
-public class BaseExtensionBuilder implements Builder<BaseAnnotationExtension>{
+public class BaseExtensionBuilder implements AnnotationBuilder<BaseAnnotationExtension>{
 
     private String field1 = "";
         
