@@ -53,14 +53,9 @@ public class Parser {
         URI tsourceUri = URI.create(tpath);
         URI isourceUri = URI.create(ipath);
 
-//        Source<TextContent> text = parser.parseTextContent(sourceUri);
-//        Source<ImageContent> image = (Source<ImageContent>)parser.parse(URI.create(path)); // valutare come inizializzare bene la calsse parametrizzata
-//        Source<TextContent> textsource = parser.parse(sourceUri, TextContent.class);
-//        Source<ImageContent> imagesource = parser.parse(sourceUri, ImageContent.class);
-//        TextContent content = textsource.getContent();
-//        content.setText("con il metodo iper generico");
-//        textsource.setContent(content);
-        Source<TextContent> text = parser.parse(tsourceUri, TextContent.class);
+        Source<TextContent> text;
+        
+        text = parser.parse(tsourceUri, TextContent.class);
 //        Source<ImageContent> image = parser.parse(isourceUri, ImageContent.class);
         try {
 
