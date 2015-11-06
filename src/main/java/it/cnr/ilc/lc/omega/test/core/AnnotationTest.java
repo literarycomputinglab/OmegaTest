@@ -8,10 +8,12 @@ package it.cnr.ilc.lc.omega.test.core;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 import it.cnr.ilc.lc.omega.core.ResourceManager;
+import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationBuilder;
+import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationText;
+import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationType;
+import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.entity.Annotation;
 import it.cnr.ilc.lc.omega.entity.TextContent;
-import it.cnr.ilc.lc.omega.test.BaseAnnotationExtension;
-import it.cnr.ilc.lc.omega.test.BaseExtensionBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.MimeTypeParseException;
@@ -23,9 +25,8 @@ import sirius.kernel.di.std.Part;
  */
 public class AnnotationTest {
 
-    @Part
-    private static ResourceManager resourceManager;
-
+   // @Part
+    //   private static ResourceManager resourceManager;
     public static void main(String[] argv) {
         OmegaCore.start();
         Logger.getLogger(Loader.class.getName()).log(Level.INFO, "Core initializing...");
@@ -38,19 +39,23 @@ public class AnnotationTest {
     }
 
     private static void annotate() throws MimeTypeParseException, ManagerAction.ActionException {
-        
+
         // load della source
         // creazione locus
         // creazione annotazione
         // gestione del collegamento tra locus / annotazione / source
         // salvataggio/aggiurnamento delle risorse coinvolte
-        
         // le annotazioni si riferiscono a due tupi di dato diversi sia per scope sia per namespace. Per semplicità le chiamiami di basso livello e di alto livello
+     /*   Annotation<TextContent, BaseAnnotationType> annotation
+         = resourceManager.createAnnotation(BaseAnnotationType.class,
+         new BaseAnnotationBuilder().text("testo della annotazione"));*/
+        Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate start ");
+        BaseAnnotationText bat = BaseAnnotationText.of("base annotation bobbe");
+        Text text = new Text();
+        bat.addLocus(text, 1, 2);
+        bat.save();
+        Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate end ");
 
-        Annotation<TextContent, BaseAnnotationExtension> annotation
-                = resourceManager.createAnnotation(BaseAnnotationExtension.class, new BaseExtensionBuilder().field1("testo sciolto dell'abbreviazione"));
-        
- ///       resourceManager.update(Annotation, Locus, Source);
-        
+///       resourceManager.update(Annotation, Locus, Source);
     }
 }

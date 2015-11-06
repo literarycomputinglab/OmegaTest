@@ -1,5 +1,7 @@
 package it.cnr.ilc.lc.omega.test;
 
+import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationBuilder;
+import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationType;
 import it.cnr.ilc.lc.omega.clavius.catalog.FileBuilder;
 import it.cnr.ilc.lc.omega.clavius.catalog.entity.Folder;
 import it.cnr.ilc.lc.omega.clavius.catalog.entity.FileAnnotationExtension;
@@ -15,6 +17,9 @@ import it.cnr.ilc.lc.omega.entity.TextLocus;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.neo4j.ogm.session.Session;
@@ -96,8 +101,9 @@ public class TesterOLD {
         locus.setStart(5);
         locus.setEnd(10);
         
-        Annotation.register(TesterOLD.BASE, BaseAnnotationExtension.class); //MODIFICARE in (TIPO, CLASSE)
-        Annotation<TextContent, BaseAnnotationExtension> nota = Annotation.newAnnotation(TesterOLD.BASE, new BaseExtensionBuilder().field1("con builder"));
+        Annotation.register(TesterOLD.BASE, BaseAnnotationType.class); //MODIFICARE in (TIPO, CLASSE)
+        Annotation<TextContent, BaseAnnotationType> nota = 
+                Annotation.newAnnotation(TesterOLD.BASE, new BaseAnnotationBuilder().text("con builder"));
         
         System.err.println(nota.toString());
 
@@ -108,9 +114,9 @@ public class TesterOLD {
         
         nota.addLocus(locus);
         
-        Annotation<TextContent, BaseAnnotationExtension> nota2 = Annotation.newAnnotation(TesterOLD.BASE,
-                new BaseExtensionBuilder()
-                .field1("con builder per nota 2")
+        Annotation<TextContent, BaseAnnotationType> nota2 = Annotation.newAnnotation(TesterOLD.BASE,
+                new BaseAnnotationBuilder()
+                .text("con builder per nota 2")
         );
         
         Relation relation = Relation.newInstance(RelationTypes.PART_OF);
@@ -138,6 +144,7 @@ public class TesterOLD {
         Annotation<TextContent, FileAnnotationExtension> page1Letter1 = Annotation.newAnnotation("File", new FileBuilder().name("Source 1"));
         locus.setAnnotation(page1Letter1); // ATTENZIONE
 
+      
         page1Letter1.addLocus(locus);
         
         session.save(page1Letter1);
