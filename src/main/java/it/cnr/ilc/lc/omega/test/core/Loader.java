@@ -8,6 +8,7 @@ package it.cnr.ilc.lc.omega.test.core;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.ResourceManager;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
+import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ public class Loader {
 
     public static void main(String[] argv) {
         OmegaCore.start();
-         Logger.getLogger(Loader.class.getName()).log(Level.INFO, "Core initializing...");
+        Logger.getLogger(Loader.class.getName()).log(Level.INFO, "Core initializing...");
         try {
             load();
         } catch (MimeTypeParseException ex) {
@@ -44,17 +45,21 @@ public class Loader {
 
     private static void load() throws MimeTypeParseException {
         for (String letter : Loader.LETTERS) {
-            String path = Loader.BASEPATH + Loader.SEPARATOR + letter;
-            URI sourceURI = URI.create(path);
-            URI contentURI = URI.create(path + Loader.SEPARATOR + letter + Loader.EXT);
             try {
-                resourceManager.createSource(sourceURI, new MimeType(Loader.TXTMIME));
-            } catch (ManagerAction.ActionException ex) {
+                String path = Loader.BASEPATH + Loader.SEPARATOR + letter;
+                URI sourceURI = URI.create(path);
+                URI contentURI = URI.create(path + Loader.SEPARATOR + letter + Loader.EXT);
+                try {
+                    resourceManager.createSource(sourceURI, new MimeType(Loader.TXTMIME));
+                } catch (ManagerAction.ActionException ex) {
+                    Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                resourceManager.setContent(sourceURI, contentURI);
+                resourceManager.inFolder(Loader.ARCHIVE, sourceURI);
+            } //        System.err.println("in test");
+            catch (InvalidURIException ex) {
                 Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            resourceManager.setContent(sourceURI, contentURI);
-            resourceManager.inFolder(Loader.ARCHIVE, sourceURI);
         }
-//        System.err.println("in test");
     }
 }

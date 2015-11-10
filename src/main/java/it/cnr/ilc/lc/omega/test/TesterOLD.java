@@ -14,6 +14,7 @@ import it.cnr.ilc.lc.omega.entity.Relation;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
 import it.cnr.ilc.lc.omega.entity.TextLocus;
+import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +62,7 @@ public class TesterOLD {
     
     public static final int BUFFER_MAX_SIZE = 1024 * 1024 * 4;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         TesterOLD tester = new TesterOLD();
 
         /* crea il nodo content*/
@@ -84,7 +85,7 @@ public class TesterOLD {
         
     }
     
-    private void test6() {
+    private void test6() throws InvalidURIException{
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Session session = DeprecatedNeo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
@@ -130,7 +131,7 @@ public class TesterOLD {
         
     }
     
-    private void test7() {
+    private void test7() throws InvalidURIException {
         Session session = DeprecatedNeo4jSessionFactory.getNeo4jSession();
         session.beginTransaction();
         
@@ -207,7 +208,7 @@ public class TesterOLD {
         session.getTransaction().commit();
     }
     
-    private void test8() {
+    private void test8() throws InvalidURIException {
         byte[] imageBuffer = new byte[BUFFER_MAX_SIZE];
         Byte[] imageByteArray = null;
         BufferedInputStream buffer = null;

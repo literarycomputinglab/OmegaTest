@@ -13,6 +13,7 @@ import it.cnr.ilc.lc.omega.core.parser.OmegaParser;
 import it.cnr.ilc.lc.omega.entity.ImageContent;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
+import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,8 +60,16 @@ public class Parser {
 //        Source<ImageContent> image = parser.parse(isourceUri, ImageContent.class);
         try {
 
-            resourceManager.createSourceContent(text);
-            resourceManager.inFolder("ClaviusArchive", URI.create(text.getUri()));
+            try {
+                resourceManager.createSourceContent(text);
+            } catch (InvalidURIException ex) {
+                Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                resourceManager.inFolder("ClaviusArchive", URI.create(text.getUri()));
+            } catch (InvalidURIException ex) {
+                Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (ManagerAction.ActionException ex) {
             Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
         }
