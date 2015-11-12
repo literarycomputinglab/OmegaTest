@@ -48,14 +48,17 @@ public class AnnotationTest {
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate start ");
 
+            
             Text text = Text.of("Un qualsiasi testo da annotare.", URI.create("/source/text/000"));
             BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
                     URI.create("/annotation/text/123"));
             bat.addLocus(text, 1, 2);
             bat.save();
-
             Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate end ");
 
+            Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
+          //  text2.save();
+            
 ///       resourceManager.update(Annotation, Locus, Source);
         } catch (InvalidURIException ex) {
             Logger.getLogger(AnnotationTest.class.getName()).log(Level.SEVERE, null, ex);
