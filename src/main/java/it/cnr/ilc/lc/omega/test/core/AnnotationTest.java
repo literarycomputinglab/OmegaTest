@@ -53,7 +53,7 @@ public class AnnotationTest {
 
             UC1();
             //UC2();
-            UC3(new URI("/source/text/000"));
+            UC3(URI.create("source/text/000"));
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
 ///       resourceManager.update(Annotation, Locus, Source);
@@ -64,9 +64,9 @@ public class AnnotationTest {
     }
 
     private static void UC1() throws ManagerAction.ActionException, InvalidURIException {
-        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("/source/text/000"));
+        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("source/text/000"));
         BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
-                URI.create("/annotation/text/123"));
+                URI.create("annotation/text/123"));
         bat.addLocus(text, 1, 2);
         bat.save();
         Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate end ");
@@ -80,8 +80,8 @@ public class AnnotationTest {
 
     private static void UC3(URI uri) throws ManagerAction.ActionException, InvalidURIException, URISyntaxException {
         Text text = Text.load(uri);
-        TextLocus locus = Abbreviation.createLocus(text.getSource(), 0, 5);
-        Abbreviation a = Abbreviation.of(locus, "abbreviazione", new URI("/abbreviation/uri/001"));
+        TextLocus locus = Abbreviation.createTextLocus(text.getSource(), 0, 5);
+        Abbreviation a = Abbreviation.of("abbreviazione", URI.create("abbreviation/uri/001"));
         a.addLocus(locus);
         a.save();
                         
