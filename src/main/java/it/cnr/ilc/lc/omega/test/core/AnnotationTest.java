@@ -8,6 +8,7 @@ package it.cnr.ilc.lc.omega.test.core;
 import it.cnr.ilc.lc.omega.annotation.Abbreviation;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
+// importare package per annotazione delle transazioni
 import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationText;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.entity.TextLocus;
@@ -53,7 +54,7 @@ public class AnnotationTest {
 
             UC1();
             //UC2();
-            UC3(URI.create("source/text/000"));
+            //UC3(URI.create("source/text/000"));
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
 ///       resourceManager.update(Annotation, Locus, Source);
@@ -63,7 +64,10 @@ public class AnnotationTest {
         }
     }
 
-    private static void UC1() throws ManagerAction.ActionException, InvalidURIException {
+    // annotare il metodo con un qualcosa tipo @transaction
+    private static void UC1() throws ManagerAction.ActionException, InvalidURIException { // gestire le transazioni
+        //Text.OpenTransaction// Livello più basso
+        // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
         Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("source/text/000"));
         BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
                 URI.create("annotation/text/123"));
