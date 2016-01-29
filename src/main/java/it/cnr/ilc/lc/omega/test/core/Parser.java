@@ -5,19 +5,16 @@
  */
 package it.cnr.ilc.lc.omega.test.core;
 
-import it.cnr.ilc.lc.omega.claviusxmlparser.ClaviusParser;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 import it.cnr.ilc.lc.omega.core.ResourceManager;
 import it.cnr.ilc.lc.omega.core.parser.OmegaParser;
-import it.cnr.ilc.lc.omega.entity.ImageContent;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import sirius.kernel.di.std.Part;
 
