@@ -6,7 +6,7 @@ import it.cnr.ilc.lc.omega.entity.Annotation;
  *
  * @author oakgen
  */
-public class Note extends Annotation.Type {
+public class Note extends Annotation.Data {
 
     private String field1;
     private String field2;
@@ -25,6 +25,11 @@ public class Note extends Annotation.Type {
 
     public void setField2(String field2) {
         this.field2 = field2;
+    }
+
+    @Override
+    public <E extends Annotation.Data> E get() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

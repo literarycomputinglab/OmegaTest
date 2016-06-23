@@ -15,9 +15,9 @@ import it.cnr.ilc.lc.omega.entity.TextLocus;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.activation.MimeTypeParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -25,17 +25,28 @@ import javax.activation.MimeTypeParseException;
  */
 public class AnnotationTest {
 
+    private static final Logger log = LogManager.getLogger(AnnotationTest.class);
+
     // @Part
     //   private static ResourceManager resourceManager;
     public static void main(String[] argv) throws URISyntaxException {
         OmegaCore.start();
-        Logger.getLogger(Loader.class.getName()).log(Level.INFO, "Core initializing...");
-        try {
-            annotate();
-        } catch (MimeTypeParseException | ManagerAction.ActionException ex) {
-            Logger.getLogger(Loader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        OmegaCore.stop();
+
+        log.info("Core initializing...");
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    annotate();
+                } catch (MimeTypeParseException | ManagerAction.ActionException | URISyntaxException ex) {
+                    log.fatal("Problem on annotate()", ex);
+                }
+                OmegaCore.stop();
+                log.info("Core stopped...");
+            }
+
+        }.start();
     }
 
     private static void annotate() throws MimeTypeParseException, ManagerAction.ActionException, URISyntaxException {
@@ -50,7 +61,7 @@ public class AnnotationTest {
             /*   Annotation<TextContent, BaseAnnotationType> annotation
              = resourceManager.createAnnotation(BaseAnnotationType.class,
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
-            Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate start ");
+            log.info("annotate() start...");
 
             UC1();
             //UC2();
@@ -59,8 +70,7 @@ public class AnnotationTest {
             //  text2.save();
 ///       resourceManager.update(Annotation, Locus, Source);
         } catch (InvalidURIException ex) {
-            Logger.getLogger(AnnotationTest.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+            log.error("BOOM!", ex);
         }
     }
 
@@ -68,12 +78,13 @@ public class AnnotationTest {
     private static void UC1() throws ManagerAction.ActionException, InvalidURIException { // gestire le transazioni
         //Text.OpenTransaction// Livello più basso
         // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
-        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("source/text/000"));
+        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("/source/text/000"));
         BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
-                URI.create("annotation/text/123"));
-        bat.addLocus(text, 1, 2);
+                URI.create("/annotation/text/123"));
+        bat.addLocus(text, 1, 5);
         bat.save();
-        Logger.getLogger(Loader.class.getName()).log(Level.INFO, "annotate end ");
+
+        log.info("annotate() end");
     }
 
     private static void UC2() throws ManagerAction.ActionException, InvalidURIException {
@@ -88,6 +99,6 @@ public class AnnotationTest {
         Abbreviation a = Abbreviation.of("abbreviazione", URI.create("abbreviation/uri/001"));
         a.addLocus(locus);
         a.save();
-                        
+
     }
 }
