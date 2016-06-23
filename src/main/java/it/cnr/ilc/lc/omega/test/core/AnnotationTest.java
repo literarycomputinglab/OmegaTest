@@ -78,9 +78,9 @@ public class AnnotationTest {
     private static void UC1() throws ManagerAction.ActionException, InvalidURIException { // gestire le transazioni
         //Text.OpenTransaction// Livello più basso
         // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
-        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("/source/text/000"));
+        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/000"));
         BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
-                URI.create("/annotation/text/123"));
+                URI.create("//annotation/text/123"));
         bat.addLocus(text, 1, 5);
         bat.save();
 
