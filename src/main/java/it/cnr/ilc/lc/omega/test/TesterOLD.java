@@ -1,48 +1,51 @@
 package it.cnr.ilc.lc.omega.test;
-
-import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationBuilder;
-import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationType;
-import it.cnr.ilc.lc.omega.entity.Annotation;
-import it.cnr.ilc.lc.omega.entity.Content;
-import it.cnr.ilc.lc.omega.entity.ImageContent;
-import it.cnr.ilc.lc.omega.entity.ImageLocus;
-import it.cnr.ilc.lc.omega.entity.Locus;
-import it.cnr.ilc.lc.omega.entity.Relation;
-import it.cnr.ilc.lc.omega.entity.Source;
-import it.cnr.ilc.lc.omega.entity.TextContent;
-import it.cnr.ilc.lc.omega.entity.TextLocus;
-import it.cnr.ilc.lc.omega.exception.InvalidURIException;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.neo4j.ogm.session.Session;
-
-/**
- *
- * @author oakgen
- */
-public class TesterOLD {
-    
-    private static final Long SOURCE_ID = 7l;
-    private static final Long ANNOTATION_ID = 9l;
-    
-    public static final String CONTENT_PAGE1_LETTER1 = "Botvitus Nericius Christophoro Clavio Salutem "
-            + "Occupationibus tuis Doctissime Clavi parcens, in tertia mea ad te epistola, praesertim vero in secunda illius parte, quae erat de puncto lineae Dinostrati ultimo abs te invento; brevior fortasse fui, quam oportuit, ideoque hac scriptione rem totam paullo uberius, si potero, explicabo. "
-            + "Principio igitur lineae conchoidis accidens certissimum est, nimirum, si per lineam Dinostrati transeat, eam per lineas rectas dividere in partes supra infraque aequales, propter motum lineae a summo, velut polo, basim permeantis; qui quidem motus familiam in hoc negotio, vel in primis ducit. "
-            + "Certum quoque est punctum, quod aequidistantiae dicitur nempe g esse in linea conchoide, utpote ipsam describens. "
-            + "Esse autem illud idem punctum g in linea Dinostrati, ex sola positione, sine ulla ratione geometrica discimus. "
-            + "age enim punctum illud, estne certa proportione descriptum, an sit extempore notatum, ut fieri solet, lineae complendae caussa? ";
-    
-    public static final String CONTENT_PAGE2_LETTER1 = "Si huius generis est, iam constat esse mechanicum, et a nostro instituto alienum; sin illius, cur non demonstratur? "
-            + "linea etenim Dinostrati, nequaquam, ne secundum nota quidem puncta geometrice sine demonstratione, describi potest, nedum secundum ignota, cuiusmodi est punctum e hoc est, punctum g in tot aetatum controversia positum. "
-            + "Nam quod ad tres quadrantes attinet, concedo omnes esse unum et eundem, sed nego ullum esse quadrantem medium, nisi prius ostendatur punctum g esse in linea iam dicta. "
-            + "ex quo sequitur nondum penitus adsolutum esse libellum de inventione puncti ultimi quod tum scripsi; quamvis a perfectione non longe absit verum ego de securitate geometrica loquor. ";
-    
+//
+//import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationBuilder;
+//import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationType;
+//import it.cnr.ilc.lc.omega.clavius.catalog.FileBuilder;
+//import it.cnr.ilc.lc.omega.clavius.catalog.entity.Folder;
+//import it.cnr.ilc.lc.omega.clavius.catalog.entity.FileAnnotationExtension;
+//import it.cnr.ilc.lc.omega.entity.Annotation;
+//import it.cnr.ilc.lc.omega.entity.Content;
+//import it.cnr.ilc.lc.omega.entity.ImageContent;
+//import it.cnr.ilc.lc.omega.entity.ImageLocus;
+//import it.cnr.ilc.lc.omega.entity.Locus;
+//import it.cnr.ilc.lc.omega.entity.Relation;
+//import it.cnr.ilc.lc.omega.entity.Source;
+//import it.cnr.ilc.lc.omega.entity.TextContent;
+//import it.cnr.ilc.lc.omega.entity.TextLocus;
+//import it.cnr.ilc.lc.omega.exception.InvalidURIException;
+//import java.io.BufferedInputStream;
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.util.ArrayList;
+//import java.util.Iterator;
+//import java.util.List;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
+//import org.neo4j.ogm.session.Session;
+//
+///**
+// *
+// * @author oakgen
+// */
+public class TesterOLD { public static final String BASE = "BaseExtension";}
+//    
+//    private static final Long SOURCE_ID = 7l;
+//    private static final Long ANNOTATION_ID = 9l;
+//    
+//    public static final String CONTENT_PAGE1_LETTER1 = "Botvitus Nericius Christophoro Clavio Salutem "
+//            + "Occupationibus tuis Doctissime Clavi parcens, in tertia mea ad te epistola, praesertim vero in secunda illius parte, quae erat de puncto lineae Dinostrati ultimo abs te invento; brevior fortasse fui, quam oportuit, ideoque hac scriptione rem totam paullo uberius, si potero, explicabo. "
+//            + "Principio igitur lineae conchoidis accidens certissimum est, nimirum, si per lineam Dinostrati transeat, eam per lineas rectas dividere in partes supra infraque aequales, propter motum lineae a summo, velut polo, basim permeantis; qui quidem motus familiam in hoc negotio, vel in primis ducit. "
+//            + "Certum quoque est punctum, quod aequidistantiae dicitur nempe g esse in linea conchoide, utpote ipsam describens. "
+//            + "Esse autem illud idem punctum g in linea Dinostrati, ex sola positione, sine ulla ratione geometrica discimus. "
+//            + "age enim punctum illud, estne certa proportione descriptum, an sit extempore notatum, ut fieri solet, lineae complendae caussa? ";
+//    
+//    public static final String CONTENT_PAGE2_LETTER1 = "Si huius generis est, iam constat esse mechanicum, et a nostro instituto alienum; sin illius, cur non demonstratur? "
+//            + "linea etenim Dinostrati, nequaquam, ne secundum nota quidem puncta geometrice sine demonstratione, describi potest, nedum secundum ignota, cuiusmodi est punctum e hoc est, punctum g in tot aetatum controversia positum. "
+//            + "Nam quod ad tres quadrantes attinet, concedo omnes esse unum et eundem, sed nego ullum esse quadrantem medium, nisi prius ostendatur punctum g esse in linea iam dicta. "
+//            + "ex quo sequitur nondum penitus adsolutum esse libellum de inventione puncti ultimi quod tum scripsi; quamvis a perfectione non longe absit verum ego de securitate geometrica loquor. ";
+//    
 //    public static final String CONTENT_PAGE1_LETTER2 = "Quia si, ut ratio naturalis docet, propter quod unum quodque tale fuerit illud magis est tale; et punctum g ut iam docui, est incertum, multo incertius erit punctum cum huius veritas ex illius veritate dependeat. "
 //            + "Quamobrem tuarum partium est, optime magister, quoniam praeclaram hanc segetem tanta dexteritate sevisti, et rigasti, tandem ad maturitatem perductam, humano genere invisendam communices. "
 //            + "bene vale; et nobis, tum de his tum etiam de Ubaldi novitate, quod commodo tuo fiat, quamprimum responde. "
@@ -324,5 +327,5 @@ public class TesterOLD {
 //        buffer = null;
 //        return imageByteArray;
 //    }
-    
-}
+//    
+//}
