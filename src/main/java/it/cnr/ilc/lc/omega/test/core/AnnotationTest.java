@@ -9,7 +9,7 @@ import it.cnr.ilc.lc.omega.annotation.Abbreviation;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 // importare package per annotazione delle transazioni
-import it.cnr.ilc.lc.omega.core.annotation.BaseAnnotationText;
+import it.cnr.ilc.lc.omega.annotation.BaseAnnotationText;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.entity.TextLocus;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
