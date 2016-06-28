@@ -5,8 +5,8 @@
  */
 package it.cnr.ilc.lc.omega.test;
 
-import it.cnr.ilc.lc.omega.annotation.BaseAnnBuilder;
-import it.cnr.ilc.lc.omega.annotation.BaseAnnotationType;
+import it.cnr.ilc.lc.omega.annotation.BaseAnnotationBuilder;
+import it.cnr.ilc.lc.omega.annotation.BaseAnnotation;
 import it.cnr.ilc.lc.omega.entity.Annotation;
 import it.cnr.ilc.lc.omega.entity.Content;
 import it.cnr.ilc.lc.omega.entity.Locus;
@@ -38,12 +38,12 @@ public class Removetest {
 //        locus.setStartLocus(5);
 //        locus.setEndLocus(10);
 //
-//        Annotation.register(TesterOLD.BASE, BaseAnnotationType.class); //MODIFICARE in (TIPO, CLASSE)
+//        Annotation.register(TesterOLD.BASE, BaseAnnotation.class); //MODIFICARE in (TIPO, CLASSE)
 //
-//        Annotation<TextContent, BaseAnnotationType> nota
+//        Annotation<TextContent, BaseAnnotation> nota
 //                = Annotation.newAnnotation(
 //                        TesterOLD.BASE,
-//                        new BaseAnnBuilder()
+//                        new BaseAnnotationBuilder()
 //                        .text("con builder")
 //                        .URI(URI.create("/uri/00/01"))
 //                );
@@ -58,9 +58,9 @@ public class Removetest {
 //        nota.addLocus(locus);
 //
 //       
-//        Annotation<TextContent, BaseAnnotationType> nota2 = Annotation.newAnnotation(
+//        Annotation<TextContent, BaseAnnotation> nota2 = Annotation.newAnnotation(
 //                TesterOLD.BASE,
-//                new BaseAnnBuilder()
+//                new BaseAnnotationBuilder()
 //                .text("con builder per nota 2")
 //                .URI(URI.create("/uri/00/02"))
 //        );

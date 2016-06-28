@@ -5,11 +5,11 @@
  */
 package it.cnr.ilc.lc.omega.test.core;
 
-import it.cnr.ilc.lc.omega.annotation.Abbreviation;
 import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 // importare package per annotazione delle transazioni
-import it.cnr.ilc.lc.omega.annotation.BaseAnnotationText;
+import it.cnr.ilc.lc.omega.adt.annotation.BaseAnnotationText;
+import it.cnr.ilc.lc.omega.annotation.AbbreviationAnnotation;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.entity.TextLocus;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
@@ -92,13 +92,13 @@ public class AnnotationTest {
         text2.save();
 
     }
-
-    private static void UC3(URI uri) throws ManagerAction.ActionException, InvalidURIException, URISyntaxException {
-        Text text = Text.load(uri);
-        TextLocus locus = Abbreviation.createTextLocus(text.getSource(), 0, 5);
-        Abbreviation a = Abbreviation.of("abbreviazione", URI.create("abbreviation/uri/001"));
-        a.addLocus(locus);
-        a.save();
-
-    }
+//
+//    private static void UC3(URI uri) throws ManagerAction.ActionException, InvalidURIException, URISyntaxException {
+//        Text text = Text.load(uri);
+//        TextLocus locus = AbbreviationAnnotation.createTextLocus(text.getSource(), 0, 5);
+//        AbbreviationAnnotation a = AbbreviationAnnotation.of("abbreviazione", URI.create("abbreviation/uri/001"));
+//        a.addLocus(locus);
+//        a.save();
+//
+//    }
 }
