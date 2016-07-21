@@ -10,17 +10,29 @@ import it.cnr.ilc.lc.omega.core.OmegaCore;
 // importare package per annotazione delle transazioni
 import it.cnr.ilc.lc.omega.adt.annotation.BaseAnnotationText;
 import it.cnr.ilc.lc.omega.adt.annotation.Work;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Authors;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Couple;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.DTOValue;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Loci;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.WorkSource;
+import it.cnr.ilc.lc.omega.annotation.structural.WorkAnnotation;
 import it.cnr.ilc.lc.omega.core.SearchManager;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.core.datatype.TextualHit;
 import it.cnr.ilc.lc.omega.entity.Annotation;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
+import it.cnr.ilc.lc.omega.entity.ext.Person;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import it.cnr.ilc.lc.omega.persistence.PersistenceHandler;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.activation.MimeTypeParseException;
 import javax.persistence.EntityManager;
@@ -87,7 +99,12 @@ public class AnnotationTest {
             //UC2();
             //UC3(URI.create("//source/text/001"));
             //UC4("abbreviazione");
-            UC5(URI.create("//source/text/001"), "abbreviazione");
+            //UC5(URI.create("//source/text/001"), "abbreviazione");
+            //UC6();
+            //UC7();
+            // UC8("java");
+            UC9();
+
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -146,12 +163,147 @@ public class AnnotationTest {
         }
     }
 
-    
-    private static void UC6 (){
-        
-      //  Work w1 = Work.of(PubblicationDate., title, uri)
+    private static void UC6() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException {
+
+        PubblicationDate pd = DTOValue
+                .instantiate(PubblicationDate.class)
+                .withValue(new Date(2016, 7, 19, 15, 0)); //PubblicationDate.instantiate().withValue(xxx)
+        List<String> list = new ArrayList<>();
+        list.add("bobbe,malle");
+        list.add("pippo,pluto");
+        Authors auth = DTOValue
+                .instantiate(Authors.class)
+                .withValue(list);
+        System.err.println("authors " + auth.getValue());
+
+        Title title = DTOValue
+                .instantiate(Title.class)
+                .withValue("Titolo di prova");
+        URI uri = URI.create("work/prova/003");
+
+        Work w1 = Work.of(auth, pd, title, uri);
+
+        w1.save();
     }
-    
+
+    private static void UC7() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException {
+
+        String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}, {"nip,qui", "nip,quo", "nip,qua"}, {"java,merda", "perl,abbestia"}};
+        List<Authors> loa = generateAuthorsList(autori);
+        int i = 1;
+        PubblicationDate pd = DTOValue
+                .instantiate(PubblicationDate.class)
+                .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
+        for (Authors authors : loa) {
+            Title title = DTOValue
+                    .instantiate(Title.class)
+                    .withValue("Titolo di prova del testo n. " + i);
+            URI uri = URI.create("work/prova/000" + i);
+
+            Work work = Work.of(authors, pd, title, uri);
+
+            work.save();
+            i++;
+        }
+
+    }
+
+    private static void UC8(String author) throws InstantiationException, IllegalAccessException, ManagerAction.ActionException {
+        EntityManager entityManager = persistence.getEntityManager();
+        entityManager.getTransaction().begin();
+
+        FullTextEntityManager fullTextEntityManager
+                = org.hibernate.search.jpa.Search.getFullTextEntityManager(entityManager);
+
+        QueryBuilder builder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder().forEntity(WorkAnnotation.class).get();
+
+        org.apache.lucene.search.Query query = builder
+                .keyword()
+                .onField("authors.name")
+                .matching(author)
+                .createQuery();
+
+        //Query luceneQuery = builder.all().createQuery();
+        log.info("Searching for WorkAnnotation");
+
+        javax.persistence.Query persistenceQuery
+                = fullTextEntityManager.createFullTextQuery(query, WorkAnnotation.class);
+
+        List<WorkAnnotation> results = persistenceQuery.getResultList();
+
+        log.info("Result is empty? " + results.isEmpty() + ", no. of element(s) " + results.size());
+
+        for (WorkAnnotation workAnnotation : results) {
+            log.info("Title (" + workAnnotation.getTitle() + ")");
+            log.info("Authors (" + workAnnotation.getAuthors() + ")");
+            List<Person> l = workAnnotation.getAuthors();
+            for (Person person : l) {
+                log.info("XXX " + person.getName() + ", " + person.getSurname());
+            }
+            log.info("Annotation URI (" + workAnnotation.getAnnotation().getUri() + ")");
+        }
+
+        entityManager.getTransaction().commit();
+
+        log.info("End.");
+    }
+// {
+//    {"bobbe,malle","pippo,pluto"}, 
+//    {...}
+// }
+
+    private static void UC9() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InvalidURIException {
+
+        Text textA = Text.of("stringa della sorgente A", URI.create("//source/text/AAA"));
+        Text textB = Text.of("Testo per la source B", URI.create("//source/text/BBB"));
+
+        String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
+        List<Authors> loa = generateAuthorsList(autori);
+        int i = 1;
+        PubblicationDate pd = DTOValue
+                .instantiate(PubblicationDate.class)
+                .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
+
+        Title title = DTOValue
+                .instantiate(Title.class)
+                .withValue("Titolo di prova del testo n. " + i);
+        URI uri = URI.create("work/prova/000" + i);
+
+        Work work = Work.of(loa.get(0), pd, title, uri);
+
+//        Loci loci = DTOValue.instantiate(Loci.class).withValue(null).withValue(null);
+        //       work.addLoci(loci);
+        work.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textA.getSource()),
+                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(0, 8))
+        );
+
+        work.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textB.getSource()),
+                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(5, 21))
+        );
+
+        work.save();
+
+    }
+
+    private static List<Authors> generateAuthorsList(String[][] args) throws InstantiationException, IllegalAccessException {
+
+        List<Authors> authors = new ArrayList<>();
+        for (String[] arg : args) {
+            List<String> list = new ArrayList<>();
+
+            for (String string : arg) {
+                list.add(string);
+            }
+            Authors auth = DTOValue
+                    .instantiate(Authors.class)
+                    .withValue(list);
+            authors.add(auth);
+        }
+
+        return authors;
+    }
+
     public static void searchSourceByURI(String uri, EntityManager entityManager) {
 
         entityManager.getTransaction().begin();
