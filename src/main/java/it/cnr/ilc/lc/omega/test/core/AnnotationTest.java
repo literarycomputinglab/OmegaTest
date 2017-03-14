@@ -13,7 +13,6 @@ import it.cnr.ilc.lc.omega.adt.annotation.Work;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Authors;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Couple;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.DTOValue;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.Loci;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
@@ -31,7 +30,6 @@ import it.cnr.ilc.lc.omega.persistence.PersistenceHandler;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.activation.MimeTypeParseException;
@@ -95,9 +93,9 @@ public class AnnotationTest {
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             log.info("annotate() start...");
 
-            // UC1();
+           //UC1();
             //UC2();
-            //UC3(URI.create("//source/text/001"));
+            //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
             //UC5(URI.create("//source/text/001"), "abbreviazione");
             //UC6();
@@ -136,7 +134,7 @@ public class AnnotationTest {
     private static void UC3(URI uri) throws ManagerAction.ActionException, InvalidURIException, URISyntaxException {
         Text text = Text.load(uri);
 
-        log.info("loaded " + text.toString());
+        log.info("loaded=(" + text.toString() + ")");
 //        TextLocus locus = AbbreviationAnnotation.createTextLocus(text.getSource(), 0, 5);
 //        AbbreviationAnnotation a = AbbreviationAnnotation.of("abbreviazione", URI.create("abbreviation/uri/001"));
 //        a.addLocus(locus);
@@ -167,10 +165,10 @@ public class AnnotationTest {
 
         PubblicationDate pd = DTOValue
                 .instantiate(PubblicationDate.class)
-                .withValue(new Date(2016, 7, 19, 15, 0)); //PubblicationDate.instantiate().withValue(xxx)
+                .withValue(new Date(2016, 10, 21, 10, 51)); //PubblicationDate.instantiate().withValue(xxx)
         List<String> list = new ArrayList<>();
-        list.add("bobbe,malle");
-        list.add("pippo,pluto");
+        list.add("hillary,clinton");
+        list.add("donald,trump");
         Authors auth = DTOValue
                 .instantiate(Authors.class)
                 .withValue(list);
@@ -178,8 +176,8 @@ public class AnnotationTest {
 
         Title title = DTOValue
                 .instantiate(Title.class)
-                .withValue("Titolo di prova");
-        URI uri = URI.create("work/prova/003");
+                .withValue("Elezioni USA 2016");
+        URI uri = URI.create("//work/usa/2016");
 
         Work w1 = Work.of(auth, pd, title, uri);
 
@@ -255,12 +253,12 @@ public class AnnotationTest {
 
     private static void UC9() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InvalidURIException {
 
-        Text textA = Text.of("stringa della sorgente A", URI.create("//source/text/AAA"));
-        Text textB = Text.of("Testo per la source B", URI.create("//source/text/BBB"));
+        Text textA = Text.of("Hillary Clinton Curriculum", URI.create("//source/text/hillary/curri"));
+        Text textB = Text.of("Donald Trump Curriculum", URI.create("//source/text/donald/curri"));
 
         String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
         List<Authors> loa = generateAuthorsList(autori);
-        int i = 1;
+        int i = 2;
         PubblicationDate pd = DTOValue
                 .instantiate(PubblicationDate.class)
                 .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
@@ -268,7 +266,7 @@ public class AnnotationTest {
         Title title = DTOValue
                 .instantiate(Title.class)
                 .withValue("Titolo di prova del testo n. " + i);
-        URI uri = URI.create("work/prova/000" + i);
+        URI uri = URI.create("/work/electionday/00" + i);
 
         Work work = Work.of(loa.get(0), pd, title, uri);
 
