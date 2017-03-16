@@ -9,6 +9,7 @@ import it.cnr.ilc.lc.omega.core.ManagerAction;
 import it.cnr.ilc.lc.omega.core.OmegaCore;
 // importare package per annotazione delle transazioni
 import it.cnr.ilc.lc.omega.adt.annotation.BaseAnnotationText;
+import it.cnr.ilc.lc.omega.adt.annotation.DublinCore;
 import it.cnr.ilc.lc.omega.adt.annotation.Work;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Authors;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Couple;
@@ -17,6 +18,9 @@ import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.WorkSource;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Contributor;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Relation;
+import it.cnr.ilc.lc.omega.annotation.catalog.DublinCoreAnnotation;
 import it.cnr.ilc.lc.omega.annotation.structural.WorkAnnotation;
 import it.cnr.ilc.lc.omega.core.SearchManager;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
@@ -93,7 +97,7 @@ public class AnnotationTest {
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             log.info("annotate() start...");
 
-           //UC1();
+            //UC1();
             //UC2();
             //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
@@ -101,7 +105,8 @@ public class AnnotationTest {
             //UC6();
             //UC7();
             // UC8("java");
-            UC9();
+            //UC9();
+            UC10();
 
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
@@ -281,6 +286,19 @@ public class AnnotationTest {
         );
 
         work.save();
+
+    }
+
+    private static void UC10() throws InstantiationException, IllegalAccessException {
+
+        String[] contributors = {"first contributor", "second contributor", "third contributor"};
+        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
+
+        Work work = null;
+
+        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
+                DTOValue.instantiate(Contributor.class).withValue(contributors),
+                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
 
     }
 
