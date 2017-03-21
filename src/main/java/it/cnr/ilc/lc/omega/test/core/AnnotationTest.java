@@ -18,8 +18,10 @@ import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.WorkSource;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.Contributor;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.Relation;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.Contributor;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.DTOValueDC;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.Relation;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.RelationObject;
 import it.cnr.ilc.lc.omega.annotation.catalog.DublinCoreAnnotation;
 import it.cnr.ilc.lc.omega.annotation.structural.WorkAnnotation;
 import it.cnr.ilc.lc.omega.core.SearchManager;
@@ -289,16 +291,29 @@ public class AnnotationTest {
 
     }
 
-    private static void UC10() throws InstantiationException, IllegalAccessException {
+    private static void UC10() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException {
 
         String[] contributors = {"first contributor", "second contributor", "third contributor"};
-        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
+//        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
 
         Work work = null;
 
-        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
-                DTOValue.instantiate(Contributor.class).withValue(contributors),
-                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
+//        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
+//                DTOValue.instantiate(Contributor.class).withValue(contributors),
+//                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
+        Contributor contributor = DTOValueDC.instantiate(Contributor.class).withValue(contributors);
+
+        Couple<DublinCoreAnnotation.DCTerms, RelationObject> couple = new Couple(DublinCoreAnnotation.DCTerms.FORMAT,
+                DTOValueDC.instantiate(RelationObject.class).withValue("application/xml"));
+
+        Couple<DublinCoreAnnotation.DCTerms, RelationObject> couple2 = new Couple(DublinCoreAnnotation.DCTerms.ABSTRACT,
+                DTOValueDC.instantiate(RelationObject.class).withValue("abstract di stoca"));
+
+        Relation relation = DTOValueDC.instantiate(Relation.class).addValue(couple).addValue(couple2);
+        DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/001")).withTerms(contributor, relation);
+        System.err.println("relation " + relation.toString());
+        dc.save();
+        System.err.println("Dublin Core information stored");
 
     }
 
