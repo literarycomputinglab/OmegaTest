@@ -10,7 +10,7 @@ import it.cnr.ilc.lc.omega.annotation.BaseAnnotation;
 import it.cnr.ilc.lc.omega.entity.Annotation;
 import it.cnr.ilc.lc.omega.entity.Content;
 import it.cnr.ilc.lc.omega.entity.Locus;
-import it.cnr.ilc.lc.omega.entity.Relation;
+import it.cnr.ilc.lc.omega.entity.AnnotationRelation;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
 import it.cnr.ilc.lc.omega.entity.TextLocus;
@@ -65,7 +65,7 @@ public class Removetest {
 //                .URI(URI.create("/uri/00/02"))
 //        );
 //
-//        Relation relation = Relation.newInstance(RelationTypes.PART_OF);
+//        AnnotationRelation relation = AnnotationRelation.newInstance(RelationTypes.PART_OF);
 //        relation.setSourceAnnotation(nota2);
 //        relation.setTargetAnnotation(nota);
 //        nota2.addRelation(relation);

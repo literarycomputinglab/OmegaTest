@@ -296,8 +296,9 @@ public class AnnotationTest {
         String[] contributors = {"first contributor", "second contributor", "third contributor"};
 //        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
 
-        Work work = null;
+        Work work = Work.load(URI.create("/work/electionday/002"));
 
+        System.err.println("loaded work (" + work.toString() + ")");
 //        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
 //                DTOValue.instantiate(Contributor.class).withValue(contributors),
 //                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
