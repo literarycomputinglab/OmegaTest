@@ -18,10 +18,7 @@ import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.WorkSource;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.Contributor;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.DTOValueDC;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.Relation;
-import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.RelationObject;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.*;
 import it.cnr.ilc.lc.omega.annotation.catalog.DublinCoreAnnotation;
 import it.cnr.ilc.lc.omega.annotation.structural.WorkAnnotation;
 import it.cnr.ilc.lc.omega.core.SearchManager;
@@ -300,18 +297,43 @@ public class AnnotationTest {
 
         System.err.println("loaded work (" + work.toString() + ")");
 //        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
-//                DTOValue.instantiate(Contributor.class).withValue(contributors),
+//                DTOValue.instantiate(DCContributor.class).withValue(contributors),
 //                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
-        Contributor contributor = DTOValueDC.instantiate(Contributor.class).withValue(contributors);
+        DCContributor contributor = DTOValueDC.instantiate(DCContributor.class).withValue(contributors);
 
-        Couple<DublinCoreAnnotation.DCTerms, RelationObject> couple = new Couple(DublinCoreAnnotation.DCTerms.FORMAT,
-                DTOValueDC.instantiate(RelationObject.class).withValue("application/xml"));
+        Couple<DublinCoreAnnotation.DCTerms, DCRelationObject> couple = new Couple(DublinCoreAnnotation.DCTerms.FORMAT,
+                DTOValueDC.instantiate(DCRelationObject.class).withValue("application/xml"));
 
-        Couple<DublinCoreAnnotation.DCTerms, RelationObject> couple2 = new Couple(DublinCoreAnnotation.DCTerms.ABSTRACT,
-                DTOValueDC.instantiate(RelationObject.class).withValue("abstract di stoca"));
+        Couple<DublinCoreAnnotation.DCTerms, DCRelationObject> couple2 = new Couple(DublinCoreAnnotation.DCTerms.ABSTRACT,
+                DTOValueDC.instantiate(DCRelationObject.class).withValue("abstract di stoca"));
 
-        Relation relation = DTOValueDC.instantiate(Relation.class).addValue(couple).addValue(couple2);
-        DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/001")).withTerms(contributor, relation);
+        DCRelation relation = DTOValueDC.instantiate(DCRelation.class).addValue(couple).addValue(couple2);
+
+        DCTitle title = DTOValueDC.instantiate(DCTitle.class).withValue("Titolo dell'opera");
+
+        DCSubject subject = DTOValueDC.instantiate(DCSubject.class).withValue(new String[]{"subj1", "subj2", "another subj"});
+
+        DCDate date = DTOValueDC.instantiate(DCDate.class).withValue(new Couple<>(new Date(0), "evento boh!"));
+
+        DCCoverage coverage = DTOValueDC.instantiate(DCCoverage.class).withValue(null);
+        DCCreator creator = DTOValueDC.instantiate(DCCreator.class).withValue(null);
+        //    DCDate date = DTOValueDC.instantiate(DCDate.class).withValue(null);
+        DCDescription description = DTOValueDC.instantiate(DCDescription.class).withValue(null);
+        DCFormat format = DTOValueDC.instantiate(DCFormat.class).withValue(null);
+        DCIdentifier identifier = DTOValueDC.instantiate(DCIdentifier.class).withValue(null);
+        DCLanguage language = DTOValueDC.instantiate(DCLanguage.class).withValue(null);
+        DCPublisher publisher = DTOValueDC.instantiate(DCPublisher.class).withValue(null);
+        DCRights rights = DTOValueDC.instantiate(DCRights.class).withValue(null);
+        DCSource source = DTOValueDC.instantiate(DCSource.class).withValue(null);
+        DCType type = DTOValueDC.instantiate(DCType.class).withValue(null);
+
+        DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/001"))
+                .withTerms(contributor, coverage,
+                        creator, date, description, format,
+                        identifier, language, publisher,
+                        relation, rights, source, subject,
+                        title, type);
+
         System.err.println("relation " + relation.toString());
         dc.save();
         System.err.println("Dublin Core information stored");
