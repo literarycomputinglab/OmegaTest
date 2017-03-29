@@ -31,6 +31,12 @@
             <artifactId>OmegaAnnotation</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>it.cnr.ilc.lc</groupId>
+            <artifactId>OmegaResourceSystem</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.tika/tika -->
         <dependency>
             <groupId>org.apache.tika</groupId>

@@ -29,7 +29,16 @@ import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
 import it.cnr.ilc.lc.omega.entity.ext.Person;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
+import it.cnr.ilc.lc.omega.exception.VirtualResourceSystemException;
 import it.cnr.ilc.lc.omega.persistence.PersistenceHandler;
+import it.cnr.ilc.lc.omega.resourcesystem.Collection;
+import it.cnr.ilc.lc.omega.resourcesystem.Resource;
+import it.cnr.ilc.lc.omega.resourcesystem.ResourceSystemComponent;
+import it.cnr.ilc.lc.omega.resourcesystem.dto.DTOValueRSC;
+import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCDescription;
+import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCName;
+import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCParent;
+import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCType;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -105,7 +114,8 @@ public class AnnotationTest {
             //UC7();
             // UC8("java");
             //UC9();
-            UC10();
+            //UC10();
+            UC11();
 
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
@@ -337,6 +347,51 @@ public class AnnotationTest {
         System.err.println("relation " + relation.toString());
         dc.save();
         System.err.println("Dublin Core information stored");
+
+    }
+
+    private static void UC11() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, VirtualResourceSystemException {
+
+        RSCName rootName = DTOValueRSC.instantiate(RSCName.class).withValue("radice");
+        RSCDescription rootDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella root");
+        RSCType rootType = DTOValueRSC.instantiate(RSCType.class).withValue("folder/directory");
+
+        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/000"))
+                .withParams(rootName, rootDescription, rootType, RSCParent.NOPARENT);
+
+        RSCName firstName = DTOValueRSC.instantiate(RSCName.class).withValue("first level");
+        RSCDescription firstDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella first (figlia di root)");
+        RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue("folder/directory");
+        RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
+        
+        
+        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/first/001"))
+                .withParams(firstName, firstDescription, firstType, rootParent);
+
+        RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
+        RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
+        RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue("item");
+       
+        
+        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/resource/0001"))
+                .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
+
+        root.add(itemRootLevel);
+        root.add(firstLevel);
+        
+        RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in first level");
+        RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder first");
+        RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue("item");
+        RSCParent firstLevelParent = DTOValueRSC.instantiate(RSCParent.class).withValue(firstLevel.getCurrentComponent(Collection.class));
+
+        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/first/resource/0002"))
+                .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
+        
+        firstLevel.add(itemFirstLevel);
+        
+        root.print(System.err);
+        
+        root.save();
 
     }
 
