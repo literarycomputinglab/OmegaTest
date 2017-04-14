@@ -113,8 +113,8 @@ public class AnnotationTest {
             //UC6();
             //UC7();
             // UC8("java");
-            //UC9();
-            //UC10();
+            UC9();
+            UC10();
             UC11();
 
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
@@ -266,21 +266,23 @@ public class AnnotationTest {
 // }
 
     private static void UC9() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InvalidURIException {
-
+        log.info("Use case 9 starting");
         Text textA = Text.of("Hillary Clinton Curriculum", URI.create("//source/text/hillary/curri"));
         Text textB = Text.of("Donald Trump Curriculum", URI.create("//source/text/donald/curri"));
+        Text textC = Text.of("Rocker Duck Curriculum", URI.create("//source/text/rockerduck/curri"));
+        Text textD = Text.of("Donald Duck Curriculum", URI.create("//source/text/donaldduck/curri"));
 
         String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
         List<Authors> loa = generateAuthorsList(autori);
-        int i = 2;
+        //int i = 2;
         PubblicationDate pd = DTOValue
                 .instantiate(PubblicationDate.class)
                 .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
 
         Title title = DTOValue
                 .instantiate(Title.class)
-                .withValue("Titolo di prova del testo n. " + i);
-        URI uri = URI.create("/work/electionday/00" + i);
+                .withValue("Titolo di prova del testo n. " + 1);
+        URI uri = URI.create("/work/electionday/00" + 1);
 
         Work work = Work.of(loa.get(0), pd, title, uri);
 
@@ -296,15 +298,51 @@ public class AnnotationTest {
 
         work.save();
 
+        Title title2 = DTOValue
+                .instantiate(Title.class)
+                .withValue("Titolo di prova del testo n. " + 2);
+        URI uri2 = URI.create("/work/electionday/00" + 2);
+
+        Work work2 = Work.of(loa.get(0), pd, title2, uri2);
+
+//        Loci loci = DTOValue.instantiate(Loci.class).withValue(null).withValue(null);
+        //       work.addLoci(loci);
+        work2.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textC.getSource()),
+                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(1, 6))
+        );
+
+        work2.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textD.getSource()),
+                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(7, 18))
+        );
+
+        work2.save();
     }
 
     private static void UC10() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException {
 
+        log.info("Use case 10 starting");
+
         String[] contributors = {"first contributor", "second contributor", "third contributor"};
 //        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
 
-        Work work = Work.load(URI.create("/work/electionday/002"));
+        Work work = Work.load(URI.create("/work/electionday/001"));
+        Work work2 = Work.load(URI.create("/work/electionday/002"));
 
+        /*
+        String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
+        List<Authors> loa = generateAuthorsList(autori);
+        //int i = 2;
+        PubblicationDate pd = DTOValue
+                .instantiate(PubblicationDate.class)
+                .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
+
+        Title tit = DTOValue
+                .instantiate(Title.class)
+                .withValue("Titolo di prova del testo n. " + 1);
+        URI uri = URI.create("/work/electionday/00" + 1);
+
+        Work work = Work.of(loa.get(0), pd, tit, uri);
+         */
         System.err.println("loaded work (" + work.toString() + ")");
 //        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
 //                DTOValue.instantiate(DCContributor.class).withValue(contributors),
@@ -337,15 +375,24 @@ public class AnnotationTest {
         DCSource source = DTOValueDC.instantiate(DCSource.class).withValue(null);
         DCType type = DTOValueDC.instantiate(DCType.class).withValue(null);
 
+        System.err.println("relation " + relation.toString());
+
         DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/001"))
                 .withTerms(contributor, coverage,
                         creator, date, description, format,
                         identifier, language, publisher,
                         relation, rights, source, subject,
                         title, type);
-
-        System.err.println("relation " + relation.toString());
         dc.save();
+
+        DublinCore<TextContent> dc2 = DublinCore.of(work2, URI.create("/dublincore/uri/002"))
+                .withTerms(contributor, coverage,
+                        creator, date, description, format,
+                        identifier, language, publisher,
+                        relation, rights, source, subject,
+                        title, type);
+
+        dc2.save();
         System.err.println("Dublin Core information stored");
 
     }
@@ -363,22 +410,21 @@ public class AnnotationTest {
         RSCDescription firstDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella first (figlia di root)");
         RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue("folder/directory");
         RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
-        
-        
+
         ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/first/001"))
                 .withParams(firstName, firstDescription, firstType, rootParent);
 
         RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
         RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
         RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue("item");
-       
-        
+
         ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/resource/0001"))
                 .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
 
+        itemRootLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/001")));
         root.add(itemRootLevel);
         root.add(firstLevel);
-        
+
         RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in first level");
         RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder first");
         RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue("item");
@@ -386,11 +432,12 @@ public class AnnotationTest {
 
         ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/first/resource/0002"))
                 .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
-        
+
+        itemFirstLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/002")));
         firstLevel.add(itemFirstLevel);
-        
+
         root.print(System.err);
-        
+
         root.save();
 
     }
