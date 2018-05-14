@@ -14,6 +14,7 @@ import it.cnr.ilc.lc.omega.adt.annotation.Work;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Authors;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Couple;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.DTOValue;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.Loci;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.PubblicationDate;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
@@ -26,6 +27,7 @@ import it.cnr.ilc.lc.omega.core.SearchManager;
 import it.cnr.ilc.lc.omega.core.datatype.Text;
 import it.cnr.ilc.lc.omega.core.datatype.TextualHit;
 import it.cnr.ilc.lc.omega.entity.Annotation;
+import it.cnr.ilc.lc.omega.entity.Locus;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
 import it.cnr.ilc.lc.omega.entity.ext.Person;
@@ -116,10 +118,11 @@ public class AnnotationTest {
             //UC8("bobbe");
             //UC9();
             //UC9b();
+            UC9c();
             //UC10();
             //UC11();
             //UC12();
-            UC13();
+            //UC13();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -352,6 +355,33 @@ public class AnnotationTest {
                 DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(5, 21))
         );
 
+        work.save();
+
+    }
+
+    private static void UC9c() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InvalidURIException {
+        log.info("Use case 9c starting");
+        Text textA = Text.load(URI.create("//source/text/hillary/curri"));
+
+        String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
+        List<Authors> loa = generateAuthorsList(autori);
+        //int i = 2;
+        PubblicationDate pd = DTOValue
+                .instantiate(PubblicationDate.class)
+                .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
+
+        Title title = DTOValue
+                .instantiate(Title.class)
+                .withValue("Titolo di prova del testo n. " + 1);
+        URI uri = URI.create("/work/electionday3/00" + 1);
+
+        Work work = Work.of(loa.get(0), pd, title, uri);
+
+        Loci loci = DTOValue.instantiate(Loci.class).withValue(Work.createTextLocus(textA.getSource()));
+        //       work.addLoci(loci);
+
+        work.addLoci(loci);
+ 
         work.save();
 
     }
