@@ -118,11 +118,11 @@ public class AnnotationTest {
             //UC8("bobbe");
             //UC9();
             //UC9b();
-            UC9c();
+           // UC9c();
             //UC10();
             //UC11();
             //UC12();
-            //UC13();
+            UC13();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -381,7 +381,7 @@ public class AnnotationTest {
         //       work.addLoci(loci);
 
         work.addLoci(loci);
- 
+
         work.save();
 
     }
@@ -570,12 +570,11 @@ public class AnnotationTest {
         itemFirstLevel.setResourceContent(Work.load(URI.create("/work/electionday2/001")));
 
         firstLevel.add(itemFirstLevel);
-
+        firstLevel.save();
         //firstLevel.save();
         ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/2/000"));
 
         root.print(System.err);
-
 //
 //        root.print(System.err);
 //
