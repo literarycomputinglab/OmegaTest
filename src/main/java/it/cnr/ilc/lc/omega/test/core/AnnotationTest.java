@@ -108,7 +108,7 @@ public class AnnotationTest {
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             log.info("annotate() start...");
 
-            //UC1();
+            UC1();
             //UC2();
             //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
@@ -122,7 +122,7 @@ public class AnnotationTest {
             //UC10();
             //UC11();
             //UC12();
-            UC13();
+            //UC13();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
