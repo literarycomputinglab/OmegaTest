@@ -42,6 +42,7 @@ import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCDescription;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCName;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCParent;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCType;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -108,21 +109,20 @@ public class AnnotationTest {
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             log.info("annotate() start...");
 
-            UC1();
-            //UC2();
+            //UC1();
+           // UC2();
             //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
-            //UC5(URI.create("//source/text/001"), "abbreviazione");
+            //UC5(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"), "abs");
             //UC6();
             //UC7();
             //UC8("bobbe");
             //UC9();
             //UC9b();
-           // UC9c();
+            //UC9c();
             //UC10();
             //UC11();
-            //UC12();
-            //UC13();
+            UC13();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -145,8 +145,8 @@ public class AnnotationTest {
         log.info("annotate() end");
     }
 
-    private static void UC2() throws ManagerAction.ActionException, InvalidURIException {
-        Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
+    private static void UC2() throws ManagerAction.ActionException, InvalidURIException, MalformedURLException {
+        Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt").toURL());
         text2.save();
 
     }
@@ -185,10 +185,10 @@ public class AnnotationTest {
 
         PubblicationDate pd = DTOValue
                 .instantiate(PubblicationDate.class)
-                .withValue(new Date(2016, 10, 21, 10, 51)); //PubblicationDate.instantiate().withValue(xxx)
+                .withValue(new Date(2018, 05, 24, 12, 12)); //PubblicationDate.instantiate().withValue(xxx)
         List<String> list = new ArrayList<>();
-        list.add("hillary,clinton");
-        list.add("donald,trump");
+        list.add("matteo,salvini");
+        list.add("di maio,gigino");
         Authors auth = DTOValue
                 .instantiate(Authors.class)
                 .withValue(list);
@@ -196,8 +196,8 @@ public class AnnotationTest {
 
         Title title = DTOValue
                 .instantiate(Title.class)
-                .withValue("Elezioni USA 2016");
-        URI uri = URI.create("//work/usa/2016");
+                .withValue("Governo 2018");
+        URI uri = URI.create("/work/italia/governo/2018");
 
         Work w1 = Work.of(auth, pd, title, uri);
 
@@ -317,8 +317,8 @@ public class AnnotationTest {
                 DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(1, 6))
         );
 
-        work2.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textD.getSource()),
-                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(7, 18))
+        work2.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textD.getSource())//,
+                //DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(7, 18))
         );
 
         work2.save();
@@ -328,9 +328,7 @@ public class AnnotationTest {
         log.info("Use case 9b starting");
         Text textA = Text.load(URI.create("//source/text/hillary/curri"));
         Text textB = Text.load(URI.create("//source/text/donald/curri"));
-        Text textC = Text.load(URI.create("//source/text/rockerduck/curri"));
-        Text textD = Text.load(URI.create("//source/text/donaldduck/curri"));
-
+    
         String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
         List<Authors> loa = generateAuthorsList(autori);
         //int i = 2;
@@ -341,18 +339,17 @@ public class AnnotationTest {
         Title title = DTOValue
                 .instantiate(Title.class)
                 .withValue("Titolo di prova del testo n. " + 1);
-        URI uri = URI.create("/work/electionday2/00" + 1);
+        URI uri = URI.create("/work/electionday3/00" + 1);
 
         Work work = Work.of(loa.get(0), pd, title, uri);
 
 //        Loci loci = DTOValue.instantiate(Loci.class).withValue(null).withValue(null);
         //       work.addLoci(loci);
-        work.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textA.getSource()),
-                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(0, 8))
+        work.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textA.getSource())
         );
 
         work.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textB.getSource()),
-                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(5, 21))
+                DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(8, 13))
         );
 
         work.save();
@@ -373,7 +370,7 @@ public class AnnotationTest {
         Title title = DTOValue
                 .instantiate(Title.class)
                 .withValue("Titolo di prova del testo n. " + 1);
-        URI uri = URI.create("/work/electionday3/00" + 1);
+        URI uri = URI.create("/work/electionday4/00" + 1);
 
         Work work = Work.of(loa.get(0), pd, title, uri);
 
@@ -393,25 +390,11 @@ public class AnnotationTest {
         String[] contributors = {"first contributor", "second contributor", "third contributor"};
 //        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
 
-        Work work = Work.load(URI.create("/work/electionday/001"));
-        Work work2 = Work.load(URI.create("/work/electionday/002"));
+        Work work = Work.load(URI.create("/work/electionday2/001"));
+        Work work2 = Work.load(URI.create("/work/electionday2/002"));
 
-        /*
-        String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
-        List<Authors> loa = generateAuthorsList(autori);
-        //int i = 2;
-        PubblicationDate pd = DTOValue
-                .instantiate(PubblicationDate.class)
-                .withValue(new Date()); //PubblicationDate.instantiate().withValue(xxx)
 
-        Title tit = DTOValue
-                .instantiate(Title.class)
-                .withValue("Titolo di prova del testo n. " + 1);
-        URI uri = URI.create("/work/electionday/00" + 1);
-
-        Work work = Work.of(loa.get(0), pd, tit, uri);
-         */
-        System.err.println("loaded work (" + work.toString() + ")");
+        log.info("loaded work (" + work.toString() + ")");
 //        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
 //                DTOValue.instantiate(DCContributor.class).withValue(contributors),
 //                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
@@ -443,7 +426,7 @@ public class AnnotationTest {
         DCSource source = DTOValueDC.instantiate(DCSource.class).withValue(null);
         DCType type = DTOValueDC.instantiate(DCType.class).withValue(null);
 
-        System.err.println("relation " + relation.toString());
+        log.info("relation " + relation.toString());
 
         DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/001"))
                 .withTerms(contributor, coverage,
@@ -452,6 +435,8 @@ public class AnnotationTest {
                         relation, rights, source, subject,
                         title, type);
         dc.save();
+        
+        
 
         DublinCore<TextContent> dc2 = DublinCore.of(work2, URI.create("/dublincore/uri/002"))
                 .withTerms(contributor, coverage,
@@ -461,7 +446,7 @@ public class AnnotationTest {
                         title, type);
 
         dc2.save();
-        System.err.println("Dublin Core information stored");
+       log.info("Dublin Core information stored");
 
     }
 
@@ -471,7 +456,7 @@ public class AnnotationTest {
         RSCDescription rootDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella root");
         RSCType rootType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
 
-        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/000"))
+        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/col000"))
                 .withParams(rootName, rootDescription, rootType, RSCParent.NOPARENT);
 
         RSCName firstName = DTOValueRSC.instantiate(RSCName.class).withValue("first level");
@@ -479,14 +464,14 @@ public class AnnotationTest {
         RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
         RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
 
-        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/first/001"))
+        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/first/col001"))
                 .withParams(firstName, firstDescription, firstType, rootParent);
 
         RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
         RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
         RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
 
-        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/resource/0001"))
+        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root/resource/res001"))
                 .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
 
         itemRootLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/001")));
@@ -495,10 +480,10 @@ public class AnnotationTest {
 
         RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in first level");
         RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder first");
-        RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);//ERR: DOVREBBE ESSERE COLLECTION
+        RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
         RSCParent firstLevelParent = DTOValueRSC.instantiate(RSCParent.class).withValue(firstLevel.getCurrentComponent(Collection.class));
 
-        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/first/resource/0002"))
+        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root/first/resource/res002"))
                 .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
 
         itemFirstLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/002")));
@@ -510,54 +495,54 @@ public class AnnotationTest {
 
     }
 
-    private static void UC12() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, VirtualResourceSystemException {
-
-        RSCName rootName = DTOValueRSC.instantiate(RSCName.class).withValue("radice");
-        RSCDescription rootDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella root");
-        RSCType rootType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
-
-        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/2/000"))
-                .withParams(rootName, rootDescription, rootType, RSCParent.NOPARENT);
-
-        RSCName firstName = DTOValueRSC.instantiate(RSCName.class).withValue("first level");
-        RSCDescription firstDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella first (figlia di root)");
-        RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
-        RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
-
-        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/first/2/001"))
-                .withParams(firstName, firstDescription, firstType, rootParent);
-
-        RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
-        RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
-        RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
-
-        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/resource/2/0001"))
-                .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
-
-        itemRootLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/001")));
-        root.add(itemRootLevel);
-        root.add(firstLevel);
-
-        RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in first level");
-        RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder first");
-        RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION); //ERR: DOVREBBE ESSERE COLLECTION
-        RSCParent firstLevelParent = DTOValueRSC.instantiate(RSCParent.class).withValue(firstLevel.getCurrentComponent(Collection.class));
-
-        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/first/resource/2/0002"))
-                .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
-
-        itemFirstLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/002")));
-        firstLevel.add(itemFirstLevel);
-
-        root.print(System.err);
-
-        root.save();
-
-    }
+//    private static void UC12() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, VirtualResourceSystemException {
+//
+//        RSCName rootName = DTOValueRSC.instantiate(RSCName.class).withValue("radice");
+//        RSCDescription rootDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella root");
+//        RSCType rootType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
+//
+//        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/2/000"))
+//                .withParams(rootName, rootDescription, rootType, RSCParent.NOPARENT);
+//
+//        RSCName firstName = DTOValueRSC.instantiate(RSCName.class).withValue("first level");
+//        RSCDescription firstDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella first (figlia di root)");
+//        RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
+//        RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
+//
+//        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/first/2/001"))
+//                .withParams(firstName, firstDescription, firstType, rootParent);
+//
+//        RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
+//        RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
+//        RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
+//
+//        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/resource/2/0001"))
+//                .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
+//
+//        itemRootLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/001")));
+//        root.add(itemRootLevel);
+//        root.add(firstLevel);
+//
+//        RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in first level");
+//        RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder first");
+//        RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE); //ERR: DOVREBBE ESSERE COLLECTION
+//        RSCParent firstLevelParent = DTOValueRSC.instantiate(RSCParent.class).withValue(firstLevel.getCurrentComponent(Collection.class));
+//
+//        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/root/first/resource/2/0002"))
+//                .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
+//
+//        itemFirstLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/002")));
+//        firstLevel.add(itemFirstLevel);
+//
+//        root.print(System.err);
+//
+//        root.save();
+//
+//    }
 
     private static void UC13() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, VirtualResourceSystemException {
 
-        ResourceSystemComponent firstLevel = ResourceSystemComponent.load(Collection.class, URI.create("/collection/first/2/001"));
+        ResourceSystemComponent firstLevel = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/first/col001"));
 
         RSCName firstLevelElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item.work");
         RSCDescription firstLevelElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("work nel folder first");
@@ -572,7 +557,7 @@ public class AnnotationTest {
         firstLevel.add(itemFirstLevel);
         firstLevel.save();
         //firstLevel.save();
-        ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/2/000"));
+        ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/col000"));
 
         root.print(System.err);
 //
