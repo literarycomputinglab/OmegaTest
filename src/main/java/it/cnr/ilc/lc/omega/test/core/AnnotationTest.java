@@ -138,8 +138,7 @@ public class AnnotationTest {
         //Text.OpenTransaction// Livello più basso
         // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
         Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/000"));
-        BaseAnnotationText bat = BaseAnnotationText.of("Annotazione sul testo",
-                URI.create("//annotation/text/123"));
+        BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/123"),"Annotazione sul testo");
         bat.addLocus(text, 1, 5);
         bat.save();
         log.info("annotate() end");
