@@ -10,6 +10,7 @@ import it.cnr.ilc.lc.omega.core.OmegaCore;
 // importare package per annotazione delle transazioni
 import it.cnr.ilc.lc.omega.adt.annotation.BaseAnnotationText;
 import it.cnr.ilc.lc.omega.adt.annotation.DublinCore;
+import it.cnr.ilc.lc.omega.adt.annotation.LexoTerm;
 import it.cnr.ilc.lc.omega.adt.annotation.Work;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Authors;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Couple;
@@ -20,6 +21,13 @@ import it.cnr.ilc.lc.omega.adt.annotation.dto.SegmentOfInterest;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.Title;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.WorkSource;
 import it.cnr.ilc.lc.omega.adt.annotation.dto.catalog.dublincore.*;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.lexo.LeftTextContext;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.lexo.RightTextContext;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.lexo.TextFragment;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.lexo.UriSense;
+import it.cnr.ilc.lc.omega.adt.annotation.dto.lexo.LexoDTOValue;
+import it.cnr.ilc.lc.omega.annotation.LexoAnnotation;
+import it.cnr.ilc.lc.omega.annotation.LexoAnnotationBuilder;
 import it.cnr.ilc.lc.omega.annotation.catalog.DublinCoreAnnotation;
 import it.cnr.ilc.lc.omega.annotation.catalog.ResourceSystemAnnotationType;
 import it.cnr.ilc.lc.omega.annotation.structural.WorkAnnotation;
@@ -30,6 +38,7 @@ import it.cnr.ilc.lc.omega.entity.Annotation;
 import it.cnr.ilc.lc.omega.entity.Locus;
 import it.cnr.ilc.lc.omega.entity.Source;
 import it.cnr.ilc.lc.omega.entity.TextContent;
+import it.cnr.ilc.lc.omega.entity.TextLocus;
 import it.cnr.ilc.lc.omega.entity.ext.Person;
 import it.cnr.ilc.lc.omega.exception.InvalidURIException;
 import it.cnr.ilc.lc.omega.exception.VirtualResourceSystemException;
@@ -110,7 +119,7 @@ public class AnnotationTest {
             log.info("annotate() start...");
 
             //UC1();
-           // UC2();
+            // UC2();
             //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
             //UC5(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"), "abs");
@@ -122,7 +131,9 @@ public class AnnotationTest {
             //UC9c();
             //UC10();
             //UC11();
-            UC13();
+            //UC13();
+            //UC14();
+            UC15();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -138,7 +149,7 @@ public class AnnotationTest {
         //Text.OpenTransaction// Livello più basso
         // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
         Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/000"));
-        BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/123"),"Annotazione sul testo");
+        BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/123"), "Annotazione sul testo");
         bat.addLocus(text, 1, 5);
         bat.save();
         log.info("annotate() end");
@@ -154,7 +165,7 @@ public class AnnotationTest {
         Text text = Text.load(uri);
 
         log.info("loaded=(" + text.toString() + ")");
-//        TextLocus locus = AbbreviationAnnotation.createTextLocus(text.getSource(), 0, 5);
+//       TextLocus locus = AbbreviationAnnotation.createTextLocus(text.getSource(), 0, 5);
 //        AbbreviationAnnotation a = AbbreviationAnnotation.of("abbreviazione", URI.create("abbreviation/uri/001"));
 //        a.addLocus(locus);
 //        a.save();
@@ -162,7 +173,7 @@ public class AnnotationTest {
     }
 
     private static void UC4(String keyword) throws ManagerAction.ActionException, InvalidURIException, URISyntaxException {
-        List<Source<TextContent>> lstc = searchManager.searchByKeyword(keyword);
+        List<Source<TextContent>> lstc = searchManager.searchContentByKeyword(keyword);
 
         log.info("loaded " + lstc.toString());
 
@@ -317,7 +328,7 @@ public class AnnotationTest {
         );
 
         work2.addLocus(DTOValue.instantiate(WorkSource.class).withValue(textD.getSource())//,
-                //DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(7, 18))
+        //DTOValue.instantiate(SegmentOfInterest.class).withValue(new Couple<>(7, 18))
         );
 
         work2.save();
@@ -327,7 +338,7 @@ public class AnnotationTest {
         log.info("Use case 9b starting");
         Text textA = Text.load(URI.create("//source/text/hillary/curri"));
         Text textB = Text.load(URI.create("//source/text/donald/curri"));
-    
+
         String[][] autori = {{"bobbe,malle", "pippo,pluto", "topolino,minnie"}};
         List<Authors> loa = generateAuthorsList(autori);
         //int i = 2;
@@ -392,7 +403,6 @@ public class AnnotationTest {
         Work work = Work.load(URI.create("/work/electionday2/001"));
         Work work2 = Work.load(URI.create("/work/electionday2/002"));
 
-
         log.info("loaded work (" + work.toString() + ")");
 //        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
 //                DTOValue.instantiate(DCContributor.class).withValue(contributors),
@@ -434,8 +444,6 @@ public class AnnotationTest {
                         relation, rights, source, subject,
                         title, type);
         dc.save();
-        
-        
 
         DublinCore<TextContent> dc2 = DublinCore.of(work2, URI.create("/dublincore/uri/002"))
                 .withTerms(contributor, coverage,
@@ -445,7 +453,7 @@ public class AnnotationTest {
                         title, type);
 
         dc2.save();
-       log.info("Dublin Core information stored");
+        log.info("Dublin Core information stored");
 
     }
 
@@ -538,7 +546,6 @@ public class AnnotationTest {
 //        root.save();
 //
 //    }
-
     private static void UC13() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, VirtualResourceSystemException {
 
         ResourceSystemComponent firstLevel = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/first/col001"));
@@ -562,6 +569,53 @@ public class AnnotationTest {
 //
 //        root.print(System.err);
 //
+    }
+
+    public static void UC14() throws InvalidURIException, ManagerAction.ActionException {
+
+        Text textA = Text.load(URI.create("//source/text/hillary/curri"));
+
+        TextLocus locus = Locus.locusOf(TextLocus.class, URI.create("/uri/of/locus/003"), Locus.PointsTo.CONTENT);
+        // TextLocus locus = new TextLocus();
+        locus.setSource(textA.getSource());
+
+        locus.setStartLocus(2);
+        locus.setEndLocus(7);
+
+        Annotation.register("lexoAnnotation", LexoAnnotation.class);
+
+        Annotation<TextContent, LexoAnnotation> annotation
+                = Annotation.newAnnotation("lexoAnnotation",
+                        new LexoAnnotationBuilder()
+                                .URI(URI.create("/lexoannotation/uri/004"))
+                                .leftContext("left context di bobbe")
+                                .rightContext("bobbe right context")
+                                .textFragment("bobbe")
+                                .uriSense(URI.create("/sense/1/bobbe")));
+
+        annotation.addLocus(locus);
+        EntityManager entityManager = persistence.getEntityManager();
+        entityManager.getTransaction().begin();
+
+        entityManager.merge(annotation);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+    }
+
+    public static void UC15() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        Text textA = Text.load(URI.create("//source/text/hillary/curri"));
+
+        LexoTerm lt = LexoTerm.of(URI.create("/lexoannotation/uri/005"))
+                .withParams(LexoDTOValue.instantiate(UriSense.class).withValue(URI.create("/sense/1/bobbe")),
+                        LexoDTOValue.instantiate(TextFragment.class).withValue("bobbemalle"),
+                        LexoDTOValue.instantiate(LeftTextContext.class).withValue("a sinistra di bobbemalle"),
+                        LexoDTOValue.instantiate(RightTextContext.class).withValue("bobbemalle alla sua destra"))
+                .build();
+        lt.addLocus(textA, 1, 3);
+        lt.save();
+
     }
 
     private static List<Authors> generateAuthorsList(String[][] args) throws InstantiationException, IllegalAccessException {
