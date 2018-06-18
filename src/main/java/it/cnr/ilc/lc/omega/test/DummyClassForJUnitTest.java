@@ -15,7 +15,7 @@ public class DummyClassForJUnitTest {
     }
     
     public static String play(String a){
-        return a.concat("-ok1");
+        return a.concat("-ok");
     }
     
     public String action(String b){

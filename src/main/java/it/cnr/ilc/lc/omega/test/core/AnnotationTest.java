@@ -112,13 +112,14 @@ public class AnnotationTest {
             // creazione annotazione
             // gestione del collegamento tra locus / annotazione / source
             // salvataggio/aggiurnamento delle risorse coinvolte
-            // le annotazioni si riferiscono a due tupi di dato diversi sia per scope sia per namespace. Per semplicità le chiamiami di basso livello e di alto livello
+            // le annotazioni si riferiscono a due tupi d   i dato diversi sia per scope sia per namespace. Per semplicità le chiamiami di basso livello e di alto livello
             /*   Annotation<TextContent, BaseAnnotationType> annotation
              = resourceManager.createAnnotation(BaseAnnotationType.class,
              new BaseAnnotationBuilder().text("testo della annotazione"));*/
             log.info("annotate() start...");
 
             //UC1();
+            //UC16();
             // UC2();
             //UC3(URI.create("//source/text/AAA"));
             //UC4("abbreviazione");
@@ -133,7 +134,13 @@ public class AnnotationTest {
             //UC11();
             //UC13();
             //UC14();
-            UC15();
+            // UC15();
+            //UC16();
+            //UC17();
+            //UC18();
+            //UC19();
+            UC20();
+            //UC21();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -149,8 +156,10 @@ public class AnnotationTest {
         //Text.OpenTransaction// Livello più basso
         // OmegaTrasaction -> questo tipo di dato gestisce le transazioni
         Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/000"));
+        Text text2 = Text.of("Secondo testo puntato dalla stessa Base Annotation su //source/text/000", URI.create("//source/text/001"));
         BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/123"), "Annotazione sul testo");
         bat.addLocus(text, 1, 5);
+        bat.addLocus(text2, 6, 8);
         bat.save();
         log.info("annotate() end");
     }
@@ -566,6 +575,7 @@ public class AnnotationTest {
         ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/col000"));
 
         root.print(System.err);
+
 //
 //        root.print(System.err);
 //
@@ -616,6 +626,119 @@ public class AnnotationTest {
         lt.addLocus(textA, 1, 3);
         lt.save();
 
+    }
+
+    public static void UC16() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        Text textA = Text.load(URI.create("//source/text/001"));
+
+        Text.delete(textA);
+        System.err.println("text is " + textA.toString());
+
+    }
+
+    public static void UC17() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/003"));
+        Text text2 = Text.of("Secondo testo puntato dalla stessa Base Annotation su //source/text/003", URI.create("//source/text/004"));
+        BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/456"), "Annotazione sul testo");
+        bat.addLocus(text, 1, 5);
+        bat.addLocus(text2, 6, 8);
+        bat.save();
+        log.info("Creata Base Annotation " + bat);
+
+        bat = (BaseAnnotationText) BaseAnnotationText.delete(bat);
+
+        log.info("Rimossa Base Annotation " + bat);
+
+    }
+
+    public static void UC18() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        Text text = Text.of("Abbr. e' una abbreviazione di abbreviazione.", URI.create("//source/text/003"));
+        Text text2 = Text.of("Secondo testo puntato dalla stessa Base Annotation su //source/text/003", URI.create("//source/text/004"));
+
+        text.save();
+        text2.save();
+
+        BaseAnnotationText bat = BaseAnnotationText.of(URI.create("//annotation/text/456"), "Annotazione sul testo");
+        bat.addLocus(text, 1, 5);
+        bat.addLocus(text2, 6, 8);
+        bat.save();
+        log.info("Creata Base Annotation " + bat);
+
+        text = (Text) Text.delete(text); //Valutare l'uniformita' tra le delete (static vs non static)
+        log.info("Rimossa Base Annotation " + bat);
+
+    }
+
+    public static void UC19() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        Work.delete(Work.load(URI.create("/work/electionday2/001")));
+    }
+
+    public static void UC20() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/007")));
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/006")));
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/005")));
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/004")));
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/003")));
+//        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/002")));
+        DublinCore.delete(DublinCore.load(URI.create("/dublincore/uri/008")));
+
+    }
+
+    public static void UC21() throws InvalidURIException, ManagerAction.ActionException, InstantiationException, IllegalAccessException {
+
+        String[] contributors = {"first contributor", "second contributor", "third contributor"};
+//        String[] relations = {DublinCoreAnnotation.DCTerms.ABSTRACT.toString() + ":bobbe è bello"};
+
+        Work work = Work.load(URI.create("/work/electionday2/001"));
+
+        log.info("loaded work (" + work.toString() + ")");
+//        DublinCore<TextContent> dc = DublinCore.of(work).withTerms(
+//                DTOValue.instantiate(DCContributor.class).withValue(contributors),
+//                DTOValue.instantiate(Relation.class).withValue("abstract:bobbe è negro"));
+        DCContributor contributor = DTOValueDC.instantiate(DCContributor.class).withValue(contributors);
+
+        Couple<DublinCoreAnnotation.DCTerms, DCRelationObject> couple = new Couple(DublinCoreAnnotation.DCTerms.FORMAT,
+                DTOValueDC.instantiate(DCRelationObject.class).withValue("application/xml"));
+
+        Couple<DublinCoreAnnotation.DCTerms, DCRelationObject> couple2 = new Couple(DublinCoreAnnotation.DCTerms.ABSTRACT,
+                DTOValueDC.instantiate(DCRelationObject.class).withValue("abstract di stoca"));
+
+        DCRelation relation = DTOValueDC.instantiate(DCRelation.class).addValue(couple).addValue(couple2);
+
+        DCTitle title = DTOValueDC.instantiate(DCTitle.class).withValue("Titolo dell'opera");
+
+        DCSubject subject = DTOValueDC.instantiate(DCSubject.class).withValue(new String[]{"subj1", "subj2", "another subj"});
+
+        DCDate date = DTOValueDC.instantiate(DCDate.class).withValue(new Couple<>(new Date(0), "evento nuovo"));
+
+        DCCoverage coverage = DTOValueDC.instantiate(DCCoverage.class).withValue(null);
+        DCCreator creator = DTOValueDC.instantiate(DCCreator.class).withValue(null);
+        //    DCDate date = DTOValueDC.instantiate(DCDate.class).withValue(null);
+        DCDescription description = DTOValueDC.instantiate(DCDescription.class).withValue(null);
+        DCFormat format = DTOValueDC.instantiate(DCFormat.class).withValue(null);
+        DCIdentifier identifier = DTOValueDC.instantiate(DCIdentifier.class).withValue(null);
+        DCLanguage language = DTOValueDC.instantiate(DCLanguage.class).withValue(null);
+        DCPublisher publisher = DTOValueDC.instantiate(DCPublisher.class).withValue(null);
+        DCRights rights = DTOValueDC.instantiate(DCRights.class).withValue(null);
+        DCSource source = DTOValueDC.instantiate(DCSource.class).withValue(null);
+        DCType type = DTOValueDC.instantiate(DCType.class).withValue(null);
+
+        log.info("relation " + relation.toString());
+
+        DublinCore<TextContent> dc = DublinCore.of(work, URI.create("/dublincore/uri/008"))
+                .withTerms(contributor, coverage,
+                        creator, date, description, format,
+                        identifier, language, publisher,
+                        relation, rights, source, subject,
+                        title, type);
+        dc.save();
+
+        //  DublinCore.delete(dc);
     }
 
     private static List<Authors> generateAuthorsList(String[][] args) throws InstantiationException, IllegalAccessException {
