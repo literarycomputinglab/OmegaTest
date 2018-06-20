@@ -139,8 +139,9 @@ public class AnnotationTest {
             //UC17();
             //UC18();
             //UC19();
-            UC20();
+            //UC20();
             //UC21();
+            UC22();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -462,6 +463,8 @@ public class AnnotationTest {
                         title, type);
 
         dc2.save();
+  
+
         log.info("Dublin Core information stored");
 
     }
@@ -472,7 +475,7 @@ public class AnnotationTest {
         RSCDescription rootDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("Cartella root");
         RSCType rootType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
 
-        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/col000"))
+        ResourceSystemComponent root = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root2/col000"))
                 .withParams(rootName, rootDescription, rootType, RSCParent.NOPARENT);
 
         RSCName firstName = DTOValueRSC.instantiate(RSCName.class).withValue("first level");
@@ -480,14 +483,14 @@ public class AnnotationTest {
         RSCType firstType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.COLLECTION);
         RSCParent rootParent = DTOValueRSC.instantiate(RSCParent.class).withValue(root.getCurrentComponent(Collection.class));
 
-        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root/first/col001"))
+        ResourceSystemComponent firstLevel = ResourceSystemComponent.of(Collection.class, URI.create("/collection/root2/first/col001"))
                 .withParams(firstName, firstDescription, firstType, rootParent);
 
         RSCName rootElementName = DTOValueRSC.instantiate(RSCName.class).withValue("item in root");
         RSCDescription rootElementDescription = DTOValueRSC.instantiate(RSCDescription.class).withValue("item nel folder root");
         RSCType rootElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
 
-        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root/resource/res001"))
+        ResourceSystemComponent itemRootLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root2/resource/res001"))
                 .withParams(rootElementName, rootElementDescription, rootElementType, rootParent);
 
         itemRootLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/001")));
@@ -499,7 +502,7 @@ public class AnnotationTest {
         RSCType firstLevelElementType = DTOValueRSC.instantiate(RSCType.class).withValue(ResourceSystemAnnotationType.RESOURCE);
         RSCParent firstLevelParent = DTOValueRSC.instantiate(RSCParent.class).withValue(firstLevel.getCurrentComponent(Collection.class));
 
-        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root/first/resource/res002"))
+        ResourceSystemComponent itemFirstLevel = ResourceSystemComponent.of(Resource.class, URI.create("/collection/root2/first/resource/res002"))
                 .withParams(firstLevelElementName, firstLevelElementDescription, firstLevelElementType, firstLevelParent);
 
         itemFirstLevel.setResourceContent(DublinCore.load(URI.create("/dublincore/uri/002")));
@@ -739,6 +742,17 @@ public class AnnotationTest {
         dc.save();
 
         //  DublinCore.delete(dc);
+    }
+
+    public static void UC22() throws Exception {
+
+        ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root2/col000"));
+        
+      //  ResourceSystemComponent toBeRemoved = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/first/col001"));
+        //ResourceSystemComponent toBeRemoved = root.getChild(URI.create("/collection/root2/first/resource/res002"));
+        ResourceSystemComponent toBeRemoved = root.getChild(URI.create("/collection/root2/first/col001"));
+        log.info(toBeRemoved.toString());
+        toBeRemoved = root.remove(toBeRemoved);
     }
 
     private static List<Authors> generateAuthorsList(String[][] args) throws InstantiationException, IllegalAccessException {
