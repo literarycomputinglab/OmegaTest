@@ -51,6 +51,7 @@ import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCDescription;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCName;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCParent;
 import it.cnr.ilc.lc.omega.resourcesystem.dto.RSCType;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -63,7 +64,19 @@ import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.PostingsEnum;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.automaton.CompiledAutomaton;
+import org.apache.lucene.util.automaton.RegExp;
+import org.hibernate.search.MassIndexer;
+import org.hibernate.search.SearchFactory;
+import org.hibernate.search.engine.ProjectionConstants;
+import org.hibernate.search.indexes.IndexReaderAccessor;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import sirius.kernel.di.std.Part;
 
@@ -127,6 +140,7 @@ public class AnnotationTest {
             //UC6();
             //UC7();
             //UC8("bobbe");
+            UC8b("Duck");
             //UC9();
             //UC9b();
             //UC9c();
@@ -141,7 +155,7 @@ public class AnnotationTest {
             //UC19();
             //UC20();
             //UC21();
-            UC22();
+            //UC22();
             // Text text2 = Text.of(URI.create("http://claviusontheweb.it:8080/exist/rest//db/clavius/documents/147/147.txt"));
             //  text2.save();
             // searchSourceByURI("//source/text/000", persistence.getEntityManager());
@@ -290,6 +304,74 @@ public class AnnotationTest {
 //    {"bobbe,malle","pippo,pluto"}, 
 //    {...}http://www.repubblica.it/
 // }
+
+    private static void UC8b(String keyword) throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InterruptedException, IOException {
+
+        EntityManager entityManager = persistence.getEntityManager();
+
+        entityManager.getTransaction().begin();
+
+        FullTextEntityManager fullTextEntityManager
+                = org.hibernate.search.jpa.Search.getFullTextEntityManager(entityManager);
+        MassIndexer mi = fullTextEntityManager.createIndexer();
+        mi.startAndWait();
+
+        QueryBuilder builder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder().forEntity(TextContent.class).get();
+
+        org.apache.lucene.search.Query query = builder
+                .keyword()
+                .onField("text")
+                .matching(keyword)
+                .createQuery();
+
+        //Query luceneQuery = builder.all().createQuery();
+        log.info("Searching for Source");
+
+        FullTextQuery fullTextQuery
+                = fullTextEntityManager.createFullTextQuery(query, TextContent.class);
+
+        fullTextQuery.setProjection(ProjectionConstants.DOCUMENT_ID, ProjectionConstants.THIS);
+
+        List<Object[]> result = fullTextQuery.getResultList();
+
+        log.info("no of result: " + result.size());
+
+        SearchFactory sf = fullTextEntityManager.getSearchFactory();
+        IndexReaderAccessor ira = sf.getIndexReaderAccessor();
+        IndexReader ir = ira.open(TextContent.class);
+
+        for (Object[] object : result) {
+            Terms termVector = ir.getTermVector((int) object[0], "text");
+            TermsEnum it = termVector.iterator();
+            System.err.println("trovato? " + it.seekExact(new BytesRef(keyword.getBytes())));
+            //System.err.println("trovato? " + it.seekCeil(new BytesRef(keyword.getBytes())));
+            PostingsEnum pe = it.postings(null, PostingsEnum.ALL);
+            pe.nextDoc();
+            pe.nextPosition();
+            System.err.println(pe.startOffset() + ", " + pe.endOffset());
+
+            termVector.toString();
+        }
+        ira.close(ir);
+
+        IndexReader ir2 = ira.open(TextContent.class);
+
+        CompiledAutomaton automaton = new CompiledAutomaton(new RegExp(".+", RegExp.NONE).toAutomaton());
+
+        Terms termVector = ir2.getTermVector(0, "text");
+        TermsEnum it = automaton.getTermsEnum(termVector);
+        while (it.next() != null) {
+            System.err.println("next? " + it.term());
+            PostingsEnum pe = it.postings(null, PostingsEnum.ALL);
+            pe.nextDoc();
+            pe.nextPosition();
+            System.err.println(pe.startOffset() + ", " + pe.endOffset());
+        }
+
+        ira.close(ir2);
+
+    }
 
     private static void UC9() throws InstantiationException, IllegalAccessException, ManagerAction.ActionException, InvalidURIException {
         log.info("Use case 9 starting");
@@ -463,7 +545,6 @@ public class AnnotationTest {
                         title, type);
 
         dc2.save();
-  
 
         log.info("Dublin Core information stored");
 
@@ -747,8 +828,8 @@ public class AnnotationTest {
     public static void UC22() throws Exception {
 
         ResourceSystemComponent root = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root2/col000"));
-        
-      //  ResourceSystemComponent toBeRemoved = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/first/col001"));
+
+        //  ResourceSystemComponent toBeRemoved = ResourceSystemComponent.load(Collection.class, URI.create("/collection/root/first/col001"));
         //ResourceSystemComponent toBeRemoved = root.getChild(URI.create("/collection/root2/first/resource/res002"));
         ResourceSystemComponent toBeRemoved = root.getChild(URI.create("/collection/root2/first/col001"));
         log.info(toBeRemoved.toString());
