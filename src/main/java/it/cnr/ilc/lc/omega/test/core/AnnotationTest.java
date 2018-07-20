@@ -57,7 +57,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.activation.MimeTypeParseException;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -66,8 +71,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.PostingsEnum;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermContext;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.search.Explanation;
+import org.apache.lucene.search.FuzzyQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Weight;
+import org.apache.lucene.search.spans.SpanMultiTermQueryWrapper;
+import org.apache.lucene.search.spans.SpanQuery;
+import org.apache.lucene.search.spans.SpanWeight;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.automaton.CompiledAutomaton;
 import org.apache.lucene.util.automaton.RegExp;
@@ -367,6 +382,35 @@ public class AnnotationTest {
             pe.nextDoc();
             pe.nextPosition();
             System.err.println(pe.startOffset() + ", " + pe.endOffset());
+        }
+
+        IndexReader ir3 = ira.open(TextContent.class);
+        Terms tVector = ir3.getTermVector(0, "text");
+        TermsEnum itera = null;
+        IndexSearcher searcher = new IndexSearcher(ir3);
+
+        Query spQ = new SpanMultiTermQueryWrapper<>(new FuzzyQuery(new Term("text", "clonton")));
+
+        Explanation expl = searcher.explain(spQ, 0);
+        System.err.println("explanation " + expl.getDescription());
+
+        SpanQuery spQ2 = (SpanQuery) spQ.rewrite(ir3); 
+        SpanWeight sw = spQ2.createWeight(searcher, false);
+        Set<Term> terms = new HashSet<>();
+        sw.extractTerms(terms);
+        Map<Term, TermContext> contexts = new HashMap<>();
+        sw.extractTermContexts(contexts);
+        
+        for (Map.Entry<Term, TermContext> entry : contexts.entrySet()) {
+            Term key = entry.getKey();
+            TermContext value = entry.getValue();
+            System.err.println(value);
+        }
+        Iterator<Term> itt = terms.iterator();
+        while (itt.hasNext()) {
+            Term t = itt.next();
+            System.err.println(t.bytes().bytes + ", " + t.bytes().utf8ToString() + ", " + t.bytes().offset + ", " + t.bytes().length);
+            String termString = t.text();
         }
 
         ira.close(ir2);
